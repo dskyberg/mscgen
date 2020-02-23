@@ -4,7 +4,9 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-xcode";
+import editorConfig from '../store/EditorConfig'
 
+/*
 const editorConfig = {
   mode: 'javascript',
   theme: 'xcode',
@@ -20,19 +22,21 @@ const editorOptions = {
   showLineNumbers: true,
   tabSize: 2,
 }
-
+*/
 
 export default function EditorTab(props) {
-    const {onChange, content, markers, pos, active} = props
+    const {onChange, onLoad, content, markers, pos, active} = props
+
     return (
-        <div hidden={ pos !== active }>
-          <AceEditor width="1200" onChange={ onChange } value={ content } markers={ markers } setOptions={ editorOptions } {...editorConfig}/>
+        <div hidden={ pos !== active } >
+          <AceEditor width="1200" maxLines={Infinity} onChange={ onChange } onLoad={onLoad} value={ content } markers={ markers } setOptions={ editorConfig.options() } {...editorConfig.config()}/>
         </div>
     )
 }
 
 EditorTab.propTypes = {
   onChange: PropTypes.func,
+  onLoad: PropTypes.func,
   content: PropTypes.any,
   markers: PropTypes.array,
   pos: PropTypes.number,

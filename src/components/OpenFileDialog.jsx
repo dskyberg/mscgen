@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import Input from '@material-ui/core/Input'
+import Button from '@material-ui/core/Button'
 import { blue } from '@material-ui/core/colors';
 
 const useStyles = makeStyles({
@@ -21,7 +21,7 @@ export default function OpenFileDialog(props) {
 
 
   const handleClose = (event) => {
-    console.log('Dialog.handleClose called')
+    console.log('OpenFileDialog.handleClose called')
     onClose(value);
   };
 
@@ -29,10 +29,10 @@ export default function OpenFileDialog(props) {
 
   const handleFileRead = e => {
     const content = fileReader.result
-    setValue(content)
+    onClose(content);
   }
+
   const handleChange = (event) => {
-    console.log('Dialog.handleChange called', event.target.files[0])
     fileReader = new FileReader()
     fileReader.onloadend = handleFileRead
     try {
@@ -40,13 +40,16 @@ export default function OpenFileDialog(props) {
     } catch (error) {
       console.log(error)
     }
-
   }
+
 
   return (
     <Dialog onClose={ handleClose } aria-labelledby="simple-dialog-title" open={ open }>
-      <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
-      <Input type="file" onChange={ handleChange } />
+      <DialogTitle id="simple-dialog-title">Open an MSCGen file</DialogTitle>
+      <Button component="label">
+        <input id="dialog-file-input" type="file" onChange={ handleChange } style={{ display: 'none' }}/>
+        Upload a File
+      </Button>
     </Dialog>
     );
 }

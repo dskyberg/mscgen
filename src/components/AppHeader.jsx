@@ -4,9 +4,8 @@ import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
-import Badge from '@material-ui/core/Badge'
 import MenuIcon from '@material-ui/icons/Menu'
-import NotificationsIcon from '@material-ui/icons/Notifications'
+import SettingsIcon from '@material-ui/icons/Settings'
 import Tltle from './Title'
 
 import { drawerWidth } from './AppDrawer'
@@ -45,7 +44,7 @@ class AppHeader extends React.Component {
 
     render() {
 
-        const {onDrawerClick, title, badgeContent, classes, open} = this.props
+        const {onDrawerClick, title, onSettingsClick, classes, open} = this.props
         return (
 
             <AppBar position="absolute" className={ clsx(classes.appBar, open && classes.appBarShift) }>
@@ -56,10 +55,8 @@ class AppHeader extends React.Component {
                 <Tltle className={ classes.title }>
                   {title}
                 </Tltle>
-                <IconButton color="inherit">
-                  <Badge badgeContent={ badgeContent } color="secondary">
-                    <NotificationsIcon />
-                  </Badge>
+                <IconButton color="inherit" onClick={onSettingsClick}>
+                  <SettingsIcon/>
                 </IconButton>
               </Toolbar>
             </AppBar>

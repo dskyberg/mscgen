@@ -8,15 +8,12 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
 import SaveIcon from '@material-ui/icons/Save'
 import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser'
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ClearAllIcon from '@material-ui/icons/ClearAll';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export const drawerWidth = 240;
 
@@ -70,46 +67,28 @@ class AppDrawer extends React.Component {
         </div>
         <Divider />
         <List>
-          <ListItem button>
+        <ListItem button onClick={event => onClick(event, "reset")}>
+          <Tooltip title="Reset editor to default" aria-label="Reset editor to default">
             <ListItemIcon>
-              <DashboardIcon />
+              <ClearAllIcon />
             </ListItemIcon>
-            <ListItemText primary="Dashboard" />
+            </Tooltip>
+            <ListItemText primary="Reset Editor" />
           </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <ShoppingCartIcon />
-            </ListItemIcon>
-            <ListItemText primary="Orders" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Customers" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <BarChartIcon />
-            </ListItemIcon>
-            <ListItemText primary="Reports" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <LayersIcon />
-            </ListItemIcon>
-            <ListItemText primary="Integrations" />
-          </ListItem>
-          <ListItem button onClick={event => onClick(event, "save")}>
+        <ListItem button onClick={event => onClick(event, "save")}>
+        <Tooltip title="Save editor and preview to file" aria-label="Save editor and preview to file">
             <ListItemIcon>
               <SaveIcon />
             </ListItemIcon>
+            </Tooltip>
             <ListItemText primary="Save File" />
           </ListItem>
           <ListItem button onClick={event => onClick(event, "open")}>
+          <Tooltip title="Open a file into the editor" aria-label="Open a file into the editor">
             <ListItemIcon>
               <OpenInBrowserIcon />
             </ListItemIcon>
+            </Tooltip>
             <ListItemText primary="Open File" />
           </ListItem>
          </List>
