@@ -1,14 +1,8 @@
 import React from 'react';
-import { renderMsc } from 'mscgenjs';
 import withRoot from './style/withRoot'
 import { withStyles } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Container from '@material-ui/core/Container';
-import SplitPane from 'react-split-pane'
 import AppHeader from './components/AppHeader'
 import AppDrawer from './components/AppDrawer';
 import EditorTab from './components/EditorTab'
@@ -19,7 +13,7 @@ import Message from './components/Message'
 import { saveAs } from 'file-saver'
 
 import msc_config from './store/MSC_Config'
-import {editorDefault} from './store/EditorConfig'
+import editorConfig, {editorDefault} from './store/EditorConfig'
 
 
 const styles = theme => ({
@@ -62,20 +56,14 @@ class App extends React.Component {
 
   constructor(props) {
     super(props)
-    let savedState = localStorage.getItem('editor')
-    if (savedState === null)
-      savedState = ""
-      this.state = {
+  
+    this.state = {
       open: false,
-      activeTab: 0,
-      editorState: savedState,
-      editorTheme: "xcode",
       snackbarOpen: false,
       error: null,
       openFileDialogOpen: false,
       settingsDialogOpen: false,
       svg: null,
-      usingTabs: false,
     }
   }
 
@@ -98,6 +86,7 @@ class App extends React.Component {
   handleDrawerClose = () => {
     this.setOpen(false);
   };
+
   handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -139,30 +128,27 @@ class App extends React.Component {
   }
 
   saveEditorState = (newState) => {
-    localStorage.setItem('editor', newState)
-    this.setState({
-      editorState: newState
-    })
-   this.renderPreview(newState)
+    editorConfig.setEditor(newState)
+    this.renderPreview()
   }
 
   handleEditorChange = newState => {
     this.saveEditorState(newState)
   }
 
-  renderPreview = script => {
-    const config = msc_config.config()
+  renderPreview = () => {
+    const config = msc_config.config
+    const script = editorConfig.editor
     
     require('mscgenjs').renderMsc(
       script,
       config,
       this.handleRenderMscResult
     );
-
   }
 
   componentDidMount() {
-    this.renderPreview(this.state.editorState)
+    this.renderPreview()
   }
 
   handleTabChange = (event, newValue) => {
@@ -218,14 +204,15 @@ class App extends React.Component {
     this.setState({
       openFileDialogOpen: false
     })
-    document.getElementById('__svg').innerHTML = ''
-    this.saveEditorState(value)
-    this.renderPreview(this.state.editorState)
+    if(value !== null){
+      document.getElementById('__svg').innerHTML = ''
+      this.saveEditorState(value)
+    }
   }
 
   render() {
     const {classes} = this.props
-    const {open, activeTab, snackbarOpen, snackbarMsg, error, openFileDialogOpen, editorState, settingsDialogOpen} = this.state
+    const {open, snackbarOpen, snackbarMsg, error, openFileDialogOpen, editorState, settingsDialogOpen} = this.state
     let markers = []
     if (error !== null) {
       console.log('render:', error)
@@ -246,10 +233,10 @@ class App extends React.Component {
           <Container  className={ classes.container }>
             <Grid container className={ classes.grid}>
               <Grid item xs={5} className={classes.gridItem}>
-                <EditorTab pos={ 0 } active={ 0 }  onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
+                <EditorTab onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
               </Grid>
               <Grid item xs={7} className={classes.gridItem}>
-                <PreviewTab pos={ 1 } active={ 1 } />
+                <PreviewTab />
                 </Grid>
             </Grid>
           </Container>

@@ -1,28 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button'
-import { blue } from '@material-ui/core/colors';
-
-const useStyles = makeStyles({
-  avatar: {
-    backgroundColor: blue[100],
-    color: blue[600],
-  },
-});
 
 
 export default function OpenFileDialog(props) {
-  const [value, setValue] = React.useState(null);
-  const classes = useStyles();
   const {onClose, open} = props;
 
 
   const handleClose = (event) => {
     console.log('OpenFileDialog.handleClose called')
-    onClose(value);
+    onClose(null);
   };
 
   let fileReader

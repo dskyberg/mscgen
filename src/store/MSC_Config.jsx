@@ -1,19 +1,19 @@
-import { observable, action, decorate, toJS } from "mobx"
+import { observable, action, computed, toJS } from "mobx"
 
 class MSC_Config {
-    elementId = "__svg"
-    inputType = "xu" // mscgen, mscgenny, xu, json
-    mirrorEntitiesOnBottom = true
-    additionalTemplate = 'lazy' // lazy, classic, empty
-    includeSource = false
-    regularArcTextVerticalAlignment = 'middle' // above, middle, below
-    styleAdditions = null
+    @observable elementId = "__svg"
+    @observable inputType = "xu" // mscgen, mscgenny, xu, json
+    @observable mirrorEntitiesOnBottom = true
+    @observable additionalTemplate = 'lazy' // lazy, classic, empty
+    @observable includeSource = false
+    @observable regularArcTextVerticalAlignment = 'middle' // above, middle, below
+    @observable styleAdditions = null
 
     constructor() {
         this.getStoredState()
     }
 
-    config() {
+    @computed get config() {
         const config = {
             elementId: toJS(this.elementId),
             inputType: toJS(this.inputType),
@@ -28,6 +28,7 @@ class MSC_Config {
         return config
     }
 
+    @action
     setConfigValue(name, value) {
         switch(name) {
             case 'elementId': this.elementId = value; break;
@@ -40,6 +41,7 @@ class MSC_Config {
         }
     }
 
+    @action
     setConfig(name, value) {
         try {
             this.setConfigValue(name,value)
@@ -47,7 +49,7 @@ class MSC_Config {
             return
         }
 
-        localStorage.setItem('msc-config', JSON.stringify(this.config()))
+        localStorage.setItem('msc-config', JSON.stringify(this.config))
     }
 
     getStoredState() {
@@ -61,17 +63,6 @@ class MSC_Config {
     }
 
 }
-
-decorate(MSC_Config, {
-    elementId: observable,
-    inputType: observable,
-    mirrorEntitiesOnBottom: observable,
-    additionalTemplate: observable,
-    includeSource: observable,
-    regularArcTextVerticalAlignment: observable,
-    setConfigValue:action,
-    setConfig:action
-})
 
 const msc_config = new MSC_Config()
 export default msc_config

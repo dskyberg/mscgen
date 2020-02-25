@@ -1,4 +1,4 @@
-import { observable, action, decorate, toJS } from "mobx"
+import { observable, action, computed, toJS } from "mobx"
 
 export const modes = [
     'ABAP',
@@ -35,12 +35,12 @@ export const modes = [
 export const editorDefault = `msc {
     # Options
     wordwraparcs=true;
-  
+
     # Entities
     a [label="A"],
     b [label="B"],
     c [label="C"];
-  
+
     # Arcs
     a => b [label="A to B"];
     b -> c [label="B to C"];
@@ -50,51 +50,59 @@ export const editorDefault = `msc {
     b rbox b [label="rbox over B"];
     c abox c [label="abox over C"];
     a note c [label="A note spanning A to C"];
-  
+
   }`;
-  
+
 
 class EditorConfig {
-    mode = 'javascript'
-    theme = 'xcode'
-    fontSize = 14
-    showPrintMargin = false
-    showGutter = true
-    highlightActiveLine = true
+    @observable editor = ""
+    @observable mode = 'javascript'
+    @observable theme = 'xcode'
+    @observable fontSize = 14
+    @observable showPrintMargin = false
+    @observable showGutter = true
+    @observable highlightActiveLine = true
 
     // Options
-    enableBasicAutocompletion = false
-    enableBasicAutocompletion
-    enableLiveAutocompletion = false
-    enableSnippets = false
-    showLineNumbers = true
-    tabSize = 2
+    @observable enableBasicAutocompletion = false
+    @observable enableBasicAutocompletion
+    @observable enableLiveAutocompletion = false
+    @observable enableSnippets = false
+    @observable showLineNumbers = true
+    @observable tabSize = 2
 
     constructor() {
         this.getStoredState()
     }
 
-    config() {
+    @action
+    setEditor(value) {
+        this.editor = value
+        localStorage.setItem('editor', value)
+    }
+
+    @computed get config() {
         return {
             mode: toJS(this.mode),
             theme: toJS(this.theme),
             fontSize: toJS(this.fontSize),
             showPrintMargin: toJS(this.showPrintMargin),
             showGutter: toJS(this.showGutter),
-            highlightActiveLine: toJS(this.highlightActiveLine),    
+            highlightActiveLine: toJS(this.highlightActiveLine),
         }
     }
-    options() {
+    @computed get options() {
         const options = {
         //    enableBasicAutocompletion: toJS(this.enableBasicAutocompletion),
         //    enableLiveAutocompletion: toJS(this.enableLiveAutocompletion),
         //    enableSnippets: toJS(this.enableSnippets),
             showLineNumbers: toJS(this.showLineNumbers),
-            tabSize: toJS(this.tabSize),      
+            tabSize: toJS(this.tabSize),
         }
         return options
     }
 
+    @action
     setConfigValue(name, value) {
         switch(name) {
             case 'mode': this.mode = value; break;
@@ -111,6 +119,8 @@ class EditorConfig {
             default: console.log('Unknown value', value); throw new Error('Unknown value');
         }
     }
+
+    @action
     setConfig(name, value) {
         try {
             this.setConfigValue(name,value)
@@ -118,11 +128,16 @@ class EditorConfig {
             return
         }
 
-        localStorage.setItem('editor-config', JSON.stringify(this.config()))
-        localStorage.setItem('editor-options', JSON.stringify(this.options()))
+        localStorage.setItem('editor-config', JSON.stringify(this.config))
+        localStorage.setItem('editor-options', JSON.stringify(this.options))
     }
 
     getStoredState() {
+        const savedEditor = localStorage.getItem('editor')
+        if(savedEditor !== null) {
+            this.editor = savedEditor
+        }
+
         const configStr = localStorage.getItem('editor-config')
         if(configStr !== null) {
             const config = JSON.parse(configStr)
@@ -140,22 +155,5 @@ class EditorConfig {
     }
 }
 
-decorate(EditorConfig, {
-    mode: observable,
-    theme: observable,
-    fontSize: observable,
-    showPrintMargin: observable,
-    showGutter: observable,
-    highlightActiveLine: observable,
-
-    // Options
-    enableBasicAutocompletion: observable,
-    enableLiveAutocompletion: observable,
-    enableSnippets: observable,
-    showLineNumbers: observable,
-    tabSize: observable,
-    setConfigValue:action,
-    setConfig:action
-})
 const editorConfig = new EditorConfig()
 export default editorConfig
