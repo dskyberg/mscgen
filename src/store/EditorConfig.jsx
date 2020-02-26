@@ -33,25 +33,32 @@ export const modes = [
 ]
 
 export const editorDefault = `msc {
-    # Options
-    wordwraparcs=true,
-    width=auto;
+        # Options
+        wordwraparcs=true,
+        width=auto;
 
-    # Entities
-    a [label="A"],
-    b [label="B"],
-    c [label="C"];
+        # Entities
+        a [label="A"],
+        b [label="B"],
+        c [label="C"];
 
-    # Arcs
-    a => b [label="A to B"];
-    b -> c [label="B to C"];
-    c >> b [label="C to B"];
-    b =>> a [label="B to A"];
-    a box a [label="box over A"];
-    b rbox b [label="rbox over B"];
-    c abox c [label="abox over C"];
-    a note c [label="A note spanning A to C"];
+        # Arcs
+        a => b [label="A to B"];
+        b -> c [label="B to C"];
+        c >> b [label="C to B"];
+        b =>> a [label="B to A"];
+        |||; // Throw in a break
+        a box a [label="box over A"];
+        b rbox b [label="rbox over B"];
+        c abox c [label="abox over C"];
+        a note c [label="A note spanning A to C"];
 
+        // alt, opt, loop, par, exc, break, seq, strict,
+        // neg, ignore, consider, and assert
+        a loop c [label="3 times"]{
+         a => b [label="A to B"];
+
+        };
   }`;
 
 
