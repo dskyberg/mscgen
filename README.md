@@ -1,4 +1,12 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Main Screen](/doc/images/screen1.png)
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and uses:
+React
+* [MobX](https://mobx.js.org/README.html)
+* [Material-ui](https://material-ui.com/)
+* [Ace Editor](https://ace.c9.io/)
+* [MSCGen JS](https://mscgen.js.org/tutorial.html)
+
 
 ## Getting Started
 
