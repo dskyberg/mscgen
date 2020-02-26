@@ -47,7 +47,7 @@ class AppHeader extends React.Component {
         const {onDrawerClick, title, onSettingsClick, classes, open} = this.props
         return (
 
-            <AppBar position="absolute" className={ clsx(classes.appBar, open && classes.appBarShift) }>
+            <AppBar position="fixed" className={ clsx(classes.appBar, open && classes.appBarShift) }>
               <Toolbar className={ classes.toolbar }>
                 <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={ onDrawerClick } className={ clsx(classes.menuButton, open && classes.menuButtonHidden) }>
                   <MenuIcon />
