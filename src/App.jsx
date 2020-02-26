@@ -4,11 +4,12 @@ import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import AppHeader from './components/AppHeader'
-import AppDrawer from './components/AppDrawer';
+import AppDrawer, {drawerWidth} from './components/AppDrawer';
 import EditorTab from './components/EditorTab'
 import PreviewTab from './components/PreviewTab'
 import OpenFileDialog from './components/OpenFileDialog'
 import SettingsDialog from './components/SettingsDialog'
+import Splitter from './components/Splitter'
 import Message from './components/Message'
 import { saveAs } from 'file-saver'
 
@@ -19,7 +20,6 @@ import editorConfig, {editorDefault} from './store/EditorConfig'
 const styles = theme => ({
   root: {
     display: 'flex',
-    overscrollBehaviorY: "none"
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -43,7 +43,9 @@ const styles = theme => ({
     padding: theme.spacing(2),
     overflow: 'auto',
   },
-
+  splitPane: {
+    marginLeft: 64,
+  },
   errorMarker: {
     position: 'absolute',
     background: 'rgba(100,200,100,0.5)',
@@ -56,7 +58,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props)
-  
+
     this.state = {
       open: false,
       snackbarOpen: false,
@@ -139,7 +141,7 @@ class App extends React.Component {
   renderPreview = () => {
     const config = msc_config.config
     const script = editorConfig.editor
-    
+
     require('mscgenjs').renderMsc(
       script,
       config,
@@ -172,7 +174,7 @@ class App extends React.Component {
     });
     saveAs(blob, `${Math.floor(Date.now() / 1000)}.svg`);
 }
-  
+
 
   handleDrawerItem = (event, item) => {
     if (item === 'reset') {
@@ -231,14 +233,10 @@ class App extends React.Component {
         <AppDrawer open={ open } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <main className={ classes.content }>
           <Container  className={ classes.container }>
-            <Grid container className={ classes.grid}>
-              <Grid item xs={5} className={classes.gridItem}>
+            <Splitter>
                 <EditorTab onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
-              </Grid>
-              <Grid item xs={7} className={classes.gridItem}>
                 <PreviewTab />
-                </Grid>
-            </Grid>
+            </Splitter>
           </Container>
         </main>
         <OpenFileDialog open={ openFileDialogOpen } onClose={ this.handleOpenFile } />
@@ -250,3 +248,14 @@ class App extends React.Component {
 }
 export default withRoot(withStyles(styles)(App));
 
+/*
+            <Grid container className={ classes.grid}>
+              <Grid item xs={5} className={classes.gridItem}>
+                <EditorTab onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
+              </Grid>
+              <Grid item xs={7} className={classes.gridItem}>
+                <PreviewTab />
+                </Grid>
+            </Grid>
+          </Container>
+*/

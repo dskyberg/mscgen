@@ -4,6 +4,10 @@ import {observer} from 'mobx-react'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
+    root:{
+        display: "block",
+        overflow: 'hidden',
+    }
 });
 
 
@@ -12,15 +16,13 @@ export default
 @withStyles(styles)
 @observer
 class PreviewTab extends React.Component {
-    static propTypes = {
-        pos: PropTypes.number,
-        active: PropTypes.number,      
-    }
 
     render() {
-        const {pos, active} = this.props
+        const {classes} = this.props
         return (
-            <div id="__svg" hidden={ pos !== active } ></div>
+            <div id="svg_wrapper" className={classes.root}>
+            <div id="__svg" className={classes.root} ></div>
+            </div>
         )
     }
 }
