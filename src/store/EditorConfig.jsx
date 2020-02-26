@@ -34,7 +34,8 @@ export const modes = [
 
 export const editorDefault = `msc {
     # Options
-    wordwraparcs=true;
+    wordwraparcs=true,
+    width=auto;
 
     # Entities
     a [label="A"],
