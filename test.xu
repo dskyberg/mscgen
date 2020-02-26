@@ -1,5 +1,6 @@
 msc {
-  wordwraparcs=true;
+  wordwraparcs=true,
+  width=auto;
 
   act [label="Actor", linecolor="darkgreen", textcolor="white", textbgcolor="darkgreen", arclinecolor="darkgreen", arctextcolor="darkgreen"],
   browser [label=":WebBrowser", linecolor="darkgreen", textcolor="white", textbgcolor="darkgreen", arclinecolor="darkgreen", arctextcolor="darkgreen"],
