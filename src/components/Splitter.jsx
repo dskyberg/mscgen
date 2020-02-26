@@ -99,9 +99,14 @@ const Wrapper = styled.div`
 
 const Splitter = (props) => {
     const {marginLeft} = props
+    const savedSplitPos = localStorage.getItem('splitPos')
+    const splitPos = savedSplitPos === null && 500 || parseInt(savedSplitPos, 10)
     return (
         <Wrapper >
-            <SplitPane style={{marginLeft:marginLeft}} split="vertical" defaultSize="500" primary="second">
+            <SplitPane style={{marginLeft:marginLeft}}
+              split="vertical"
+              defaultSize={splitPos} primary="second"
+              onChange={ size => localStorage.setItem('splitPos', Math.floor(size)) }>
                 {props.children}
             </SplitPane>
         </Wrapper>

@@ -198,8 +198,7 @@ class App extends React.Component {
 
     let markers = []
     if (error !== null) {
-      console.log('render:', error)
-      markers = [{
+       markers = [{
         startRow: error.location.start.line - 1,
         startCol: error.location.start.column - 1,
         endRow: error.location.end.line - 1,
@@ -216,7 +215,7 @@ class App extends React.Component {
           <Container  className={ classes.container }>
           <Splitter marginLeft={drawerOpen && 240 || 72}>
                 <EditorTab onChange={ this.handleEditorChange } content={ content } markers={ markers } />
-                  <PreviewTab />
+                  <PreviewTab error={error}/>
             </Splitter>
           </Container>
         </main>
