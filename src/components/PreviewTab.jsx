@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles'
 const styles = theme => ({
     root:{
         display: "block",
-        overflow: 'hidden',
+        overflow: 'auto',
     }
 });
 
