@@ -29,3 +29,9 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### `npm run serve`
+
+After running the build script above you can serve the production content by running the serve script.
+The content in ./build will be served on localhost:5000
+
+### [Syntax Guide](https://mscgen.js.org/tutorial.html)
