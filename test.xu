@@ -1,4 +1,5 @@
 msc {
+  wordwraparcs=true;
 
   act [label="Actor", linecolor="darkgreen", textcolor="white", textbgcolor="darkgreen", arclinecolor="darkgreen", arctextcolor="darkgreen"],
   browser [label=":WebBrowser", linecolor="darkgreen", textcolor="white", textbgcolor="darkgreen", arclinecolor="darkgreen", arctextcolor="darkgreen"],
@@ -6,7 +7,7 @@ msc {
   fbauth [label="Facebook Authorization Server", linecolor="#3a5795", textcolor="white", textbgcolor="#3a5795", arclinecolor="#3a5795", arctextcolor="#3a5795"],
   fbcont [label="Facebook Content Server", linecolor="#3a5795", textcolor="white", textbgcolor="#3a5795", arclinecolor="#3a5795", arctextcolor="#3a5795"];
 
-  act => browser [label="get FB resource"];
+  act => browser [label="get FB resource\nline 2"];
   ||| [label="Here's a break"];
   browser => app [label="request FB access"];
   app >> browser [label="<<http redirect>>"];
