@@ -137,7 +137,7 @@ class App extends React.Component {
   renderPreview = () => {
     const config = msc_config.config
     const script = editorConfig.editor
-
+    document.getElementById('__svg').innerHTML = ''
     require('mscgenjs').renderMsc(
       script,
       config,
@@ -147,12 +147,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.renderPreview()
-  }
-
-  handleTabChange = (event, newValue) => {
-    this.setState({
-      activeTab: newValue
-    })
   }
 
   saveEditorPane() {
@@ -174,8 +168,8 @@ class App extends React.Component {
 
   handleDrawerItem = (event, item) => {
     if (item === 'reset') {
-      localStorage.setItem('editor', editorDefault)
-      this.setState({editorState: editorDefault})
+      editorConfig.resetEditor()
+      this.renderPreview()
     }
     else if (item === 'open') {
       this.setState({

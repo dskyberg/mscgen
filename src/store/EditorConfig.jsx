@@ -82,6 +82,11 @@ class EditorConfig {
         localStorage.setItem('editor', value)
     }
 
+    @action
+    resetEditor() {
+        this.setEditor(editorDefault)
+    }
+
     @computed get config() {
         return {
             mode: toJS(this.mode),
