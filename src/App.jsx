@@ -25,8 +25,6 @@ const styles = theme => ({
   content: {
     display: 'flex',
     flexGrow: 1,
-    height: '100vh',
-    overflow: 'auto',
   },
   container: {
     marginTop: 64,
@@ -34,14 +32,13 @@ const styles = theme => ({
     maxWidth: '100%',
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
+    paddingLeft: 0,
+    paddingRight: 0,
   },
   grid: {
-    padding: theme.spacing(2),
     display: 'flex'
   },
   gridItem: {
-    padding: theme.spacing(2),
-    overflow: 'auto',
   },
   splitPane: {
     marginLeft: 64,
@@ -96,7 +93,6 @@ class App extends React.Component {
 
     this.setState({
       snackbarOpen: false,
-      activeTab: 0,
       snackbarMsg: ""
     });
   };
@@ -233,9 +229,9 @@ class App extends React.Component {
         <AppDrawer open={ open } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <main className={ classes.content }>
           <Container  className={ classes.container }>
-            <Splitter>
+          <Splitter>
                 <EditorTab onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
-                <PreviewTab />
+                  <PreviewTab />
             </Splitter>
           </Container>
         </main>
@@ -249,6 +245,12 @@ class App extends React.Component {
 export default withRoot(withStyles(styles)(App));
 
 /*
+            <Splitter>
+                <EditorTab onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
+                <PreviewTab />
+            </Splitter>
+*/
+/*
             <Grid container className={ classes.grid}>
               <Grid item xs={5} className={classes.gridItem}>
                 <EditorTab onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
@@ -257,5 +259,4 @@ export default withRoot(withStyles(styles)(App));
                 <PreviewTab />
                 </Grid>
             </Grid>
-          </Container>
 */
