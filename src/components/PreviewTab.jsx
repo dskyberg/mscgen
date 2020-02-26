@@ -16,16 +16,9 @@ const styles = theme => ({
 });
 
 
-
-export default
-@withStyles(styles)
-@observer
 class PreviewTab extends React.Component {
     static propTypes = {
         error: PropTypes.object
-    }
-    static defaultProps = {
-        error: null
     }
 
     displayError = (error) => {
@@ -55,3 +48,4 @@ class PreviewTab extends React.Component {
         )
     }
 }
+export default withStyles(styles)(PreviewTab)

@@ -1,10 +1,9 @@
 import React from 'react';
 import withRoot from './style/withRoot'
 import { withStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import AppHeader from './components/AppHeader'
-import AppDrawer, {drawerWidth} from './components/AppDrawer';
+import AppDrawer from './components/AppDrawer';
 import EditorTab from './components/EditorTab'
 import PreviewTab from './components/PreviewTab'
 import OpenFileDialog from './components/OpenFileDialog'
@@ -14,7 +13,7 @@ import Message from './components/Message'
 import { saveAs } from 'file-saver'
 
 import msc_config from './store/MSC_Config'
-import editorConfig, {editorDefault} from './store/EditorConfig'
+import editorConfig from './store/EditorConfig'
 
 
 const styles = theme => ({
@@ -43,11 +42,6 @@ const styles = theme => ({
   splitPane: {
     marginLeft: 64,
   },
-  errorMarker: {
-    position: 'absolute',
-    background: 'rgba(100,200,100,0.5)',
-    zIndex: 20
-  }
 });
 
 
@@ -196,26 +190,15 @@ class App extends React.Component {
     const {drawerOpen, snackbarOpen, snackbarMsg, error, openFileDialogOpen, settingsDialogOpen} = this.state
     const content = editorConfig.editor
 
-    let markers = []
-    if (error !== null) {
-       markers = [{
-        startRow: error.location.start.line - 1,
-        startCol: error.location.start.column - 1,
-        endRow: error.location.end.line - 1,
-        endCol: error.location.end.column - 1,
-        className: classes.errorMarker
-      }]
-    }
-
     return (
       <div className={ classes.root }>
         <AppHeader title="MSCGen" onDrawerClick={ this.handleDrawerOpen }  open={ drawerOpen } onSettingsClick={this.handleSettingsClick}/>
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <main className={ classes.content }>
           <Container  className={ classes.container }>
-          <Splitter marginLeft={drawerOpen && 240 || 72}>
-                <EditorTab onChange={ this.handleEditorChange } content={ content } markers={ markers } />
-                  <PreviewTab error={error}/>
+          <Splitter open={drawerOpen }>
+              <EditorTab onChange={ this.handleEditorChange } content={ content } error={ error } />
+              <PreviewTab error={error}/>
             </Splitter>
           </Container>
         </main>
@@ -227,20 +210,3 @@ class App extends React.Component {
   };
 }
 export default withRoot(withStyles(styles)(App));
-
-/*
-            <Splitter>
-                <EditorTab onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
-                <PreviewTab />
-            </Splitter>
-*/
-/*
-            <Grid container className={ classes.grid}>
-              <Grid item xs={5} className={classes.gridItem}>
-                <EditorTab onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
-              </Grid>
-              <Grid item xs={7} className={classes.gridItem}>
-                <PreviewTab />
-                </Grid>
-            </Grid>
-*/

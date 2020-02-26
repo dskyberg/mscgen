@@ -1,7 +1,14 @@
 import React from 'react';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles'
 import styled from "styled-components";
 import SplitPane from 'react-split-pane'
+import {drawerWidth} from './AppDrawer'
 
+/*
+  The react-split-pane component does not use MUI styles, and looks for
+  globally defined css class names.
+*/
 const Wrapper = styled.div`
   .Resizer {
     box-sizing: border-box;
@@ -97,13 +104,42 @@ const Wrapper = styled.div`
   }
 `;
 
+
+const styles = makeStyles(theme => ({
+  splitPane: {
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  splitPaneClose: {
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: theme.spacing(7),
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(9),
+    },
+  }
+}))
+
+
 const Splitter = (props) => {
-    const {marginLeft} = props
+    const {open} = props
+    const classes = styles()
     const savedSplitPos = localStorage.getItem('splitPos')
-    const splitPos = savedSplitPos === null && 500 || parseInt(savedSplitPos, 10)
+    let splitPos
+    if( savedSplitPos === null ){
+      splitPos = 500
+    } else {
+      splitPos = parseInt(savedSplitPos, 10)
+    }
+
     return (
         <Wrapper >
-            <SplitPane style={{marginLeft:marginLeft}}
+            <SplitPane className={clsx(classes.splitPane, !open && classes.splitPaneClose)}
               split="vertical"
               defaultSize={splitPos} primary="second"
               onChange={ size => localStorage.setItem('splitPos', Math.floor(size)) }>
