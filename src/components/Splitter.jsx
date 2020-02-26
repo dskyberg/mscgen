@@ -98,10 +98,10 @@ const Wrapper = styled.div`
 `;
 
 const Splitter = (props) => {
-
+    const {marginLeft} = props
     return (
         <Wrapper >
-            <SplitPane style={{marginLeft:72}} split="vertical" defaultSize="500" primary="second">
+            <SplitPane style={{marginLeft:marginLeft}} split="vertical" defaultSize="500" primary="second">
                 {props.children}
             </SplitPane>
         </Wrapper>

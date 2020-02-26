@@ -57,7 +57,7 @@ class App extends React.Component {
     super(props)
 
     this.state = {
-      open: false,
+      drawerOpen: false,
       snackbarOpen: false,
       error: null,
       openFileDialogOpen: false,
@@ -66,10 +66,8 @@ class App extends React.Component {
     }
   }
 
-  setOpen(x) {
-    this.setState({
-      open: x
-    })
+  componentDidMount() {
+    this.renderPreview()
   }
 
   handleSettingsClick = () => {
@@ -77,13 +75,14 @@ class App extends React.Component {
   }
   handleSettingsClosed = () => {
     this.setState({settingsDialogOpen: false})
+    this.renderPreview()
   }
 
   handleDrawerOpen = () => {
-    this.setOpen(true);
+    this.setState({drawerOpen: true})
   };
   handleDrawerClose = () => {
-    this.setOpen(false);
+    this.setState({drawerOpen: false})
   };
 
   handleSnackbarClose = (event, reason) => {
@@ -145,10 +144,6 @@ class App extends React.Component {
     );
   }
 
-  componentDidMount() {
-    this.renderPreview()
-  }
-
   saveEditorPane() {
     const payload = this.state.editorState
     const blob = new Blob([payload], {
@@ -186,12 +181,6 @@ class App extends React.Component {
 }
 
 
-  handleSaveFileClose = value => {
-    this.setState({
-      openFileDialogOpen: false
-    })
-
-  };
   handleOpenFile = value => {
     this.setState({
       openFileDialogOpen: false
@@ -204,7 +193,9 @@ class App extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {open, snackbarOpen, snackbarMsg, error, openFileDialogOpen, editorState, settingsDialogOpen} = this.state
+    const {drawerOpen, snackbarOpen, snackbarMsg, error, openFileDialogOpen, settingsDialogOpen} = this.state
+    const content = editorConfig.editor
+
     let markers = []
     if (error !== null) {
       console.log('render:', error)
@@ -219,12 +210,12 @@ class App extends React.Component {
 
     return (
       <div className={ classes.root }>
-        <AppHeader title="MSCGen" onDrawerClick={ this.handleDrawerOpen }  open={ open } onSettingsClick={this.handleSettingsClick}/>
-        <AppDrawer open={ open } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
+        <AppHeader title="MSCGen" onDrawerClick={ this.handleDrawerOpen }  open={ drawerOpen } onSettingsClick={this.handleSettingsClick}/>
+        <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <main className={ classes.content }>
           <Container  className={ classes.container }>
-          <Splitter>
-                <EditorTab onChange={ this.handleEditorChange } content={ editorState } markers={ markers } />
+          <Splitter marginLeft={drawerOpen && 240 || 72}>
+                <EditorTab onChange={ this.handleEditorChange } content={ content } markers={ markers } />
                   <PreviewTab />
             </Splitter>
           </Container>
