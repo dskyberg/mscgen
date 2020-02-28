@@ -8,10 +8,21 @@ class MSC_Config {
     @observable includeSource = false
     @observable regularArcTextVerticalAlignment = 'middle' // above, middle, below
     @observable styleAdditions = null
+    @observable error = null
+    @observable svg = null
 
     constructor() {
         this.getStoredState()
     }
+
+    @action setSvg(svg) {
+        this.svg = svg
+    }
+
+    @action setError(error) {
+        this.error = error
+    }
+
 
     @computed get config() {
         const config = {

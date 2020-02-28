@@ -84,12 +84,12 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
 
     handleEditorNumber = name => event => {
         // this.setState({ ...this.state, [name]: event.target.checked });
-        editorConfig.setConfig(name, parseInt(event.target.checked, 10))
+        editorConfig.setConfig(name, parseInt(event.target.value, 10))
     };
 
     handleMSCGenNumber = name => event => {
         // this.setState({ ...this.state, [name]: event.target.checked });
-        msc_config.setConfig(name, parseInt(event.target.checked, 10))
+        msc_config.setConfig(name, parseInt(event.target.value, 10))
     };
 
     render() {
@@ -107,7 +107,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     <TextField
                                         label="Font Size"
                                         value={editorConfig.fontSize}
-                                        onChange={this.handleEditorSelect('fontSize')}
+                                        onChange={this.handleEditorNumber('fontSize')}
                                         id="editor-fontSize"
                                         InputProps={{
                                         inputComponent: NumberFormatCustom
@@ -115,9 +115,9 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                 </FormControl>
                                 <FormControl className={classes.formControl}>
                                     <TextField
-                                        label="Tab"
+                                        label="Tab Size"
                                         value={editorConfig.tabSize}
-                                        onChange={this.handleEditorSelect('tabSize')}
+                                        onChange={this.handleEditorNumber('tabSize')}
                                         id="editor-tabSize"
                                         InputProps={{
                                         inputComponent: NumberFormatCustom

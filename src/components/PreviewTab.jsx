@@ -4,6 +4,8 @@ import {observer} from 'mobx-react'
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
+import msc_config from '../store/MSC_Config'
+import editorConfig from '../store/EditorConfig'
 
 const styles = theme => ({
     root:{
@@ -15,7 +17,8 @@ const styles = theme => ({
     }
 });
 
-
+@withStyles(styles)
+@observer
 class PreviewTab extends React.Component {
     static propTypes = {
         error: PropTypes.object
@@ -35,11 +38,33 @@ class PreviewTab extends React.Component {
         )
     }
 
+    renderPreview = () => {
+        const config = msc_config.config
+        const script = editorConfig.editor
+        document.getElementById('__svg').innerHTML = ''
+        require('mscgenjs').renderMsc(
+          script,
+          config,
+          this.handleRenderMscResult
+        );
+      }
+
+      handleRenderMscResult = (pError, pSuccess) => {
+        if (Boolean(pError)) {
+            // pError holds the error info
+          return;
+        }
+        if (Boolean(pSuccess)) {
+            // pSuccess holds the svg
+          return;
+        // the svg is in the pSuccess argument
+        }
+        console.log('Wat! Error nor success?');
+      }
+
     render() {
         const {classes, error} = this.props
-        const errorState = error !== undefined && error !== null
-        console.log('PreviewTab:', errorState)
-
+        const errorState = Boolean(error)
         return (
             <div id="svg_wrapper" className={classes.root}>
                 <div hidden={errorState} id="__svg" className={classes.root} ></div>
@@ -48,4 +73,4 @@ class PreviewTab extends React.Component {
         )
     }
 }
-export default withStyles(styles)(PreviewTab)
+export default PreviewTab

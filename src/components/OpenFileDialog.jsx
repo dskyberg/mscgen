@@ -10,7 +10,6 @@ export default function OpenFileDialog(props) {
 
 
   const handleClose = (event) => {
-    console.log('OpenFileDialog.handleClose called')
     onClose(null);
   };
 

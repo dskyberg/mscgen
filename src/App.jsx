@@ -53,10 +53,8 @@ class App extends React.Component {
     this.state = {
       drawerOpen: false,
       snackbarOpen: false,
-      error: null,
       openFileDialogOpen: false,
       settingsDialogOpen: false,
-      svg: null,
     }
   }
 
@@ -92,28 +90,24 @@ class App extends React.Component {
 
   handleRenderMscResult = (pError, pSuccess) => {
     if (Boolean(pError)) {
-      console.log(pError);
+      msc_config.setSvg(null)
+      msc_config.setError(pError)
+
       this.setState({
         snackbarMsg: pError.message,
-        error: pError,
         snackbarOpen: true,
-        svg: null
       })
-      document.getElementById('__svg').innerHTML = ''
-
       return;
-    } else if (Boolean(pSuccess)) {
-      this.setState({
-        error: null,
-        svg: pSuccess
-      })
+    }
+    if (Boolean(pSuccess)) {
+      msc_config.setError(null)
+      msc_config.setSvg(pSuccess)
       return;
     // the svg is in the pSuccess argument
     }
     console.log('Wat! Error nor success?');
     this.setState({
       snackbarMsg: "Diagram did not render properly",
-      error: null,
       snackbarOpen: true
     })
   }
@@ -138,19 +132,21 @@ class App extends React.Component {
     );
   }
 
-  saveEditorPane() {
-    const payload = this.state.editorState
+  saveEditorToFile() {
+    const payload = editorConfig.editor
     const blob = new Blob([payload], {
       type: "text/plain;charset=utf-8"
     });
+    // Save the blob to a local file
     saveAs(blob, `${Math.floor(Date.now() / 1000)}.xu`);
   }
 
-  savePreviewPane() {
-    const payload = this.state.svg
+  savePreviewToFile() {
+    const payload = msc_config.svg
     const blob = new Blob([payload], {
       type: "text/plain;charset=utf-8"
     });
+    // Save the blob to a local file
     saveAs(blob, `${Math.floor(Date.now() / 1000)}.svg`);
 }
 
@@ -166,29 +162,32 @@ class App extends React.Component {
       })
     }
     else if (item === 'save') {
-      this.saveEditorPane();
-      this.savePreviewPane();
+      this.saveEditorToFile();
+      this.savePreviewToFile();
     }
     else {
       console.log('handleDrawerItem received unknow command', item)
     }
 }
 
-
+  /**
+   * Once the user selects a file from the dialog popup,
+   * the file is loaded to the editor
+   */
   handleOpenFile = value => {
     this.setState({
       openFileDialogOpen: false
     })
     if(value !== null){
-      document.getElementById('__svg').innerHTML = ''
       this.saveEditorState(value)
     }
   }
 
   render() {
     const {classes} = this.props
-    const {drawerOpen, snackbarOpen, snackbarMsg, error, openFileDialogOpen, settingsDialogOpen} = this.state
+    const {drawerOpen, snackbarOpen, snackbarMsg, openFileDialogOpen, settingsDialogOpen} = this.state
     const content = editorConfig.editor
+    const error = msc_config.error
 
     return (
       <div className={ classes.root }>

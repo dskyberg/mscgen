@@ -70,14 +70,14 @@ class EditorConfig {
     @observable showPrintMargin = false
     @observable showGutter = true
     @observable highlightActiveLine = true
-
-    // Options
     @observable enableBasicAutocompletion = false
     @observable enableBasicAutocompletion
     @observable enableLiveAutocompletion = false
     @observable enableSnippets = false
-    @observable showLineNumbers = true
     @observable tabSize = 2
+
+    // Options
+   @observable showLineNumbers = true
 
     constructor() {
         this.getStoredState()
@@ -102,15 +102,15 @@ class EditorConfig {
             showPrintMargin: toJS(this.showPrintMargin),
             showGutter: toJS(this.showGutter),
             highlightActiveLine: toJS(this.highlightActiveLine),
+            enableBasicAutocompletion: toJS(this.enableBasicAutocompletion),
+            enableLiveAutocompletion: toJS(this.enableLiveAutocompletion),
+            enableSnippets: toJS(this.enableSnippets),
+            tabSize: toJS(this.tabSize),
         }
     }
     @computed get options() {
         const options = {
-        //    enableBasicAutocompletion: toJS(this.enableBasicAutocompletion),
-        //    enableLiveAutocompletion: toJS(this.enableLiveAutocompletion),
-        //    enableSnippets: toJS(this.enableSnippets),
             showLineNumbers: toJS(this.showLineNumbers),
-            tabSize: toJS(this.tabSize),
         }
         return options
     }
