@@ -1,3 +1,14 @@
+/*
+ Example Xu style script that shows how to define entities and arcs with
+ various color attributes.  Such as:
+   For entities and arcs:
+    linecolor
+    textcolor
+    textbgcolor
+  For entities
+   arclinecolor
+   arctextcolor
+*/
 msc {
   wordwraparcs=true,
   width=auto;
