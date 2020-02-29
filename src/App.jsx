@@ -5,7 +5,7 @@ import Container from '@material-ui/core/Container';
 import AppHeader from './components/AppHeader'
 import AppDrawer from './components/AppDrawer';
 import EditorTab from './components/EditorTab'
-import PreviewTab from './components/PreviewTab'
+import PreviewTab, {renderPreview} from './components/PreviewTab'
 import OpenFileDialog from './components/OpenFileDialog'
 import SettingsDialog from './components/SettingsDialog'
 import Splitter from './components/Splitter'
@@ -44,7 +44,6 @@ const styles = theme => ({
   },
 });
 
-
 class App extends React.Component {
 
   constructor(props) {
@@ -58,16 +57,12 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.renderPreview()
-  }
-
   handleSettingsClick = () => {
     this.setState({settingsDialogOpen: true})
   }
+
   handleSettingsClosed = () => {
     this.setState({settingsDialogOpen: false})
-    this.renderPreview()
   }
 
   handleDrawerOpen = () => {
@@ -88,48 +83,20 @@ class App extends React.Component {
     });
   };
 
-  handleRenderMscResult = (pError, pSuccess) => {
-    if (Boolean(pError)) {
-      msc_config.setSvg(null)
-      msc_config.setError(pError)
-
-      this.setState({
-        snackbarMsg: pError.message,
-        snackbarOpen: true,
-      })
-      return;
-    }
-    if (Boolean(pSuccess)) {
-      msc_config.setError(null)
-      msc_config.setSvg(pSuccess)
-      return;
-    // the svg is in the pSuccess argument
-    }
-    console.log('Wat! Error nor success?');
+  handleRenderError = (pError) => {
     this.setState({
-      snackbarMsg: "Diagram did not render properly",
-      snackbarOpen: true
+      snackbarMsg: pError.message,
+      snackbarOpen: true,
     })
   }
 
   saveEditorState = (newState) => {
     editorConfig.setEditor(newState)
-    this.renderPreview()
+    renderPreview(this.handleRenderError)
   }
 
   handleEditorChange = newState => {
     this.saveEditorState(newState)
-  }
-
-  renderPreview = () => {
-    const config = msc_config.config
-    const script = editorConfig.editor
-    document.getElementById('__svg').innerHTML = ''
-    require('mscgenjs').renderMsc(
-      script,
-      config,
-      this.handleRenderMscResult
-    );
   }
 
   saveEditorToFile() {
@@ -148,13 +115,12 @@ class App extends React.Component {
     });
     // Save the blob to a local file
     saveAs(blob, `${Math.floor(Date.now() / 1000)}.svg`);
-}
-
+  }
 
   handleDrawerItem = (event, item) => {
     if (item === 'reset') {
       editorConfig.resetEditor()
-      this.renderPreview()
+      renderPreview(this.handleEditorChange)
     }
     else if (item === 'open') {
       this.setState({
@@ -168,7 +134,7 @@ class App extends React.Component {
     else {
       console.log('handleDrawerItem received unknow command', item)
     }
-}
+  }
 
   /**
    * Once the user selects a file from the dialog popup,
@@ -197,7 +163,7 @@ class App extends React.Component {
           <Container  className={ classes.container }>
           <Splitter open={drawerOpen }>
               <EditorTab onChange={ this.handleEditorChange } content={ content } error={ error } />
-              <PreviewTab error={error}/>
+              <PreviewTab onError={this.handleRenderError}/>
             </Splitter>
           </Container>
         </main>
