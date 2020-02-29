@@ -60,4 +60,13 @@ The current editor contents will be lost.  So, save your work before you upload 
 ### Saving State
 The current editor contents, config settings, and splitter location are saved to localStorage.
 
-### [Syntax Guide](https://mscgen.js.org/tutorial.html)
+### Settings
+Click the settings icon in the upper right to open the settings dialog.
+Play around with stuff!
+
+### autoReset
+By default, the editor is in autoReset mode.  So that every change in the editor
+results in the preview rendering.  You can turn this off in the Settings dialog.
+When autoRender is off, clicking the preview pane will cause a refresh.
+
+## [Syntax Guide](https://mscgen.js.org/tutorial.html)

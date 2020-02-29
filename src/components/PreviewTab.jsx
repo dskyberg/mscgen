@@ -8,7 +8,7 @@ import msc_config from '../store/MSC_Config'
 import editorConfig from '../store/EditorConfig'
 
 
-export function renderPreview(onError) {
+function localRenderPreview(onError) {
     const config = msc_config.config
     const script = editorConfig.editor
     document.getElementById('__svg').innerHTML = ''
@@ -34,6 +34,11 @@ export function renderPreview(onError) {
         }
     );
 }
+export function renderPreview(onError) {
+    if(msc_config.autoRender){
+        localRenderPreview(onError)
+    }
+}
 
 
 const styles = theme => ({
@@ -54,7 +59,7 @@ class PreviewTab extends React.Component {
     }
 
     componentDidMount() {
-        renderPreview(this.props.onError)
+        localRenderPreview(this.props.onError)
     }
 
     displayError = (error) => {
@@ -77,13 +82,19 @@ class PreviewTab extends React.Component {
         )
     }
 
+    handleRenderClicked = (event) => {
+        event.stopPropagation()
+        if(!msc_config.autoRender){
+            localRenderPreview(this.props.onError)
+        }
+    }
 
     render() {
         const {classes} = this.props
         const error = msc_config.error
         const errorState = Boolean(error)
         return (
-            <div id="svg_wrapper" className={ classes.root }>
+            <div id="svg_wrapper" className={ classes.root } onClick={this.handleRenderClicked}>
               <div hidden={ errorState } id="__svg" className={ classes.root }></div>
               { this.displayError(error) }
             </div>

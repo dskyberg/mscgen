@@ -257,6 +257,7 @@ class SettingsDialog extends React.Component {
                                         <MenuItem value={'below'}>below</MenuItem>
                                     </Select>
                                 </FormControl>
+
                                 <FormControlLabel
                                     label="Mirror entities"
                                     labelPlacement="start"
@@ -267,6 +268,18 @@ class SettingsDialog extends React.Component {
                                     this.handleChange(msc_config, 'mirrorEntitiesOnBottom', 'switch')
                                 }
                                 value = "mirrorEntitiesOnBottom" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
+
+                                <FormControlLabel
+                                    label="Auto Render"
+                                    labelPlacement="start"
+                                    control={< Switch id = "msc-autoRender" checked = {
+                                    msc_config.autoRender
+                                }
+                                onChange = {
+                                    this.handleChange(msc_config, 'autoRender', 'switch')
+                                }
+                                value = "autoRender" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
+
                                 <FormControlLabel
                                     label="Include source"
                                     labelPlacement="start"

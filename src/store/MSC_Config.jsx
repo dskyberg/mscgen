@@ -8,6 +8,7 @@ class MSC_Config {
     @observable includeSource = false
     @observable regularArcTextVerticalAlignment = 'middle' // above, middle, below
     @observable styleAdditions = null
+    @observable autoRender = true
     @observable error = null
     @observable svg = null
 
@@ -26,17 +27,18 @@ class MSC_Config {
 
     @computed get config() {
         const config = {
-            elementId: toJS(this.elementId),
-            inputType: toJS(this.inputType),
-            mirrorEntitiesOnBottom: toJS(this.mirrorEntitiesOnBottom),
-            additionalTemplate: toJS(this.additionalTemplate),
-            includeSource: toJS(this.includeSource),
-            regularArcTextVerticalAlignment: toJS(this.regularArcTextVerticalAlignment)
+            elementId: this.elementId,
+            inputType: this.inputType,
+            mirrorEntitiesOnBottom: this.mirrorEntitiesOnBottom,
+            additionalTemplate: this.additionalTemplate,
+            includeSource: this.includeSource,
+            regularArcTextVerticalAlignment: this.regularArcTextVerticalAlignment,
+            autoRender: this.autoRender,
         }
         if (this.styleAdditions !== null) {
-            config.styleAdditions = toJS(this.styleAdditions)
+            config.styleAdditions = this.styleAdditions
         }
-        return config
+        return toJS(config)
     }
 
     @action
@@ -48,6 +50,7 @@ class MSC_Config {
             case 'additionalTemplate': this.additionalTemplate = value; break;
             case 'includeSource': this.includeSource = value; break;
             case 'regularArcTextVerticalAlignment': this.regularArcTextVerticalAlignment = value; break;
+            case 'autoRender': this.autoRender = value; break;
             default: console.log('Unknown value', value); throw new Error('Unknown value');
         }
     }
