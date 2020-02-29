@@ -61,36 +61,18 @@ NumberFormatCustom.propTypes = {
     onChange: PropTypes.func.isRequired
 };
 
-const SettingsDialog = observer(class SettingsDialog extends React.Component {
+@withStyles(styles)
+@observer
+class SettingsDialog extends React.Component {
 
-    handleEditorSelect = name => event => {
-        editorConfig.setConfig(name, event.target.value)
-
+    handleChange = (config, name, elType) => event => {
+        const t = event.target
+        switch(elType) {
+            case 'switch': config.setConfig(name, t.checked); break;
+            case 'number': config.setConfig(name, parseInt(t.value, 10)); break;
+            default: config.setConfig(name, t.value); break;
+        }
     }
-    handleMSCGenSelect = name => event => {
-        msc_config.setConfig(name, event.target.value)
-
-    }
-
-    handleEditorSwitch = name => event => {
-        // this.setState({ ...this.state, [name]: event.target.checked });
-        editorConfig.setConfig(name, event.target.checked)
-    };
-
-    handleMSCGenSwitch = name => event => {
-        // this.setState({ ...this.state, [name]: event.target.checked });
-        msc_config.setConfig(name, event.target.checked)
-    };
-
-    handleEditorNumber = name => event => {
-        // this.setState({ ...this.state, [name]: event.target.checked });
-        editorConfig.setConfig(name, parseInt(event.target.value, 10))
-    };
-
-    handleMSCGenNumber = name => event => {
-        // this.setState({ ...this.state, [name]: event.target.checked });
-        msc_config.setConfig(name, parseInt(event.target.value, 10))
-    };
 
     render() {
         const {open, onClose, classes} = this.props
@@ -107,7 +89,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     <TextField
                                         label="Font Size"
                                         value={editorConfig.fontSize}
-                                        onChange={this.handleEditorNumber('fontSize')}
+                                        onChange={this.handleChange(editorConfig,'fontSize', 'number')}
                                         id="editor-fontSize"
                                         InputProps={{
                                         inputComponent: NumberFormatCustom
@@ -117,7 +99,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     <TextField
                                         label="Tab Size"
                                         value={editorConfig.tabSize}
-                                        onChange={this.handleEditorNumber('tabSize')}
+                                        onChange={this.handleChange(editorConfig, 'tabSize', 'number')}
                                         id="editor-tabSize"
                                         InputProps={{
                                         inputComponent: NumberFormatCustom
@@ -129,7 +111,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                         labelId="editor-mode-label"
                                         id="editor-mode"
                                         value={editorConfig.mode}
-                                        onChange={this.handleEditorSelect('mode')}>
+                                        onChange={this.handleChange(editorConfig,'mode','select')}>
                                         <MenuItem value={'java'}>java</MenuItem>
                                         <MenuItem value={'javascript'}>javascript</MenuItem>
                                         <MenuItem value={'json'}>json</MenuItem>
@@ -141,7 +123,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                         labelId="editor-theme-label"
                                         id="editor-theme"
                                         value={editorConfig.theme}
-                                        onChange={this.handleEditorSelect('theme')}>
+                                        onChange={this.handleChange(editorConfig,'theme','select')}>
                                         <MenuItem value={'ambiance'}>ambiance</MenuItem>
                                         <MenuItem value={'chaos'}>chaos</MenuItem>
                                         <MenuItem value={'chrome'}>chrome</MenuItem>
@@ -170,7 +152,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     editorConfig.showPrintMargin
                                 }
                                 onChange = {
-                                    this.handleEditorSwitch('showPrintMargin')
+                                    this.handleChange(editorConfig,'showPrintMargin','switch')
                                 }
                                 value = "showPrintMargin" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
                                 <FormControlLabel
@@ -180,7 +162,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     editorConfig.showGutter
                                 }
                                 onChange = {
-                                    this.handleEditorSwitch('showGutter')
+                                    this.handleChange(editorConfig,'showGutter','switch')
                                 }
                                 value = "showGutter" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
                                 <FormControlLabel
@@ -190,7 +172,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     editorConfig.highlightActiveLine
                                 }
                                 onChange = {
-                                    this.handleEditorSwitch('highlightActiveLine')
+                                    this.handleChange(editorConfig,'highlightActiveLine','switch')
                                 }
                                 value = "highlightActiveLine" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
                                 <FormControlLabel
@@ -200,7 +182,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     editorConfig.enableBasicAutocompletion
                                 }
                                 onChange = {
-                                    this.handleEditorSwitch('enableBasicAutocompletion')
+                                    this.handleChange(editorConfig,'enableBasicAutocompletion','switch')
                                 }
                                 value = "enableBasicAutocompletion" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
                                 <FormControlLabel
@@ -210,7 +192,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     editorConfig.enableLiveAutocompletion
                                 }
                                 onChange = {
-                                    this.handleEditorSwitch('enableLiveAutocompletion')
+                                    this.handleChange(editorConfig,'enableLiveAutocompletion','switch')
                                 }
                                 value = "enableLiveAutocompletion" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
                                 <FormControlLabel
@@ -220,7 +202,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     editorConfig.enableSnippets
                                 }
                                 onChange = {
-                                    this.handleEditorSwitch('enableSnippets')
+                                    this.handleChange(editorConfig,'enableSnippets','switch')
                                 }
                                 value = "enableSnippets" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
                                 <FormControlLabel
@@ -230,7 +212,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     editorConfig.showLineNumbers
                                 }
                                 onChange = {
-                                    this.handleEditorSwitch('showLineNumbers')
+                                    this.handleChange(editorConfig,'showLineNumbers','switch')
                                 }
                                 value = "showLineNumbers" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
                             </FormGroup>
@@ -244,7 +226,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                         labelId="msc-inputType-label"
                                         id="msc-inputType"
                                         value={msc_config.inputType}
-                                        onChange={this.handleMSCGenSelect('inputType')}>
+                                        onChange={this.handleChange(msc_config,'inputType','select')}>
                                         <MenuItem value={'mscgen'}>mscgen</MenuItem>
                                         <MenuItem value={'mscgenny'}>mscgenny</MenuItem>
                                         <MenuItem value={'xu'}>xu</MenuItem>
@@ -257,7 +239,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                         labelId="msc-additionalTemplate-label"
                                         id="msc-additionalTemplate"
                                         value={msc_config.additionalTemplate}
-                                        onChange={this.handleMSCGenSelect('additionalTemplate')}>
+                                        onChange={this.handleChange(msc_config,'additionalTemplate','select')}>
                                         <MenuItem value={'lazy'}>lazy</MenuItem>
                                         <MenuItem value={'classic'}>classic</MenuItem>
                                         <MenuItem value={'empty'}>empty</MenuItem>
@@ -269,7 +251,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                         labelId="msc-regularArcTextVerticalAlignment-label"
                                         id="msc-regularArcTextVerticalAlignment"
                                         value={msc_config.regularArcTextVerticalAlignment}
-                                        onChange={this.handleMSCGenSelect('regularArcTextVerticalAlignment')}>
+                                        onChange={this.handleChange(msc_config,'regularArcTextVerticalAlignment','select')}>
                                         <MenuItem value={'above'}>above</MenuItem>
                                         <MenuItem value={'middle'}>middle</MenuItem>
                                         <MenuItem value={'below'}>below</MenuItem>
@@ -282,7 +264,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     msc_config.mirrorEntitiesOnBottom
                                 }
                                 onChange = {
-                                    this.handleMSCGenSwitch('mirrorEntitiesOnBottom')
+                                    this.handleChange(msc_config, 'mirrorEntitiesOnBottom', 'switch')
                                 }
                                 value = "mirrorEntitiesOnBottom" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
                                 <FormControlLabel
@@ -292,7 +274,7 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
                                     msc_config.includeSource
                                 }
                                 onChange = {
-                                    this.handleMSCGenSwitch('includeSource')
+                                    this.handleChange(msc_config,'includeSource','switch')
                                 }
                                 value = "includeSource" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
 
@@ -308,5 +290,5 @@ const SettingsDialog = observer(class SettingsDialog extends React.Component {
             </Dialog>
         )
     }
-})
-export default withStyles(styles)(SettingsDialog)
+}
+export default SettingsDialog
