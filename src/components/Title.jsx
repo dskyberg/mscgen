@@ -1,3 +1,6 @@
+/*
+    Copyright (c) 2020 by David Skyberg
+*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';

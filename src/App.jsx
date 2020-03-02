@@ -1,3 +1,6 @@
+/*
+    Copyright (c) 2020 by David Skyberg
+*/
 import React from 'react';
 import withRoot from './style/withRoot'
 import { withStyles } from '@material-ui/core/styles'

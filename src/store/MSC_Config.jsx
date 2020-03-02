@@ -1,3 +1,6 @@
+/*
+    Copyright (c) 2020 by David Skyberg
+*/
 import { observable, action, computed, toJS } from "mobx"
 
 class MSC_Config {

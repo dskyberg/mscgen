@@ -1,3 +1,6 @@
+/*
+    Copyright (c) 2020 by David Skyberg
+*/
 import React from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles'

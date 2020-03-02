@@ -1,3 +1,6 @@
+/*
+    Copyright (c) 2020 by David Skyberg
+*/
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -18,8 +21,8 @@ export default function Message(props) {
     const {message, open, onClose} = props
     return (
         <Snackbar anchorOrigin={ { vertical: 'bottom', horizontal: 'left', } } open={ open } autoHideDuration={ 6000 } onClose={ onClose } message={ message }
-        action={ <Action onClose={ onClose }/> } 
+        action={ <Action onClose={ onClose }/> }
         />
 
     )
-} 
+}

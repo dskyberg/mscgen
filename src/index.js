@@ -1,3 +1,6 @@
+/*
+    Copyright (c) 2020 by David Skyberg
+*/
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto';
