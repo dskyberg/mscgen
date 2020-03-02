@@ -18,6 +18,7 @@ import editorConfig from './store/EditorConfig'
 
 const styles = theme => ({
   root: {
+    height: '100%',
     display: 'flex',
   },
   appBarSpacer: theme.mixins.toolbar,
@@ -27,6 +28,7 @@ const styles = theme => ({
   },
   container: {
     marginTop: 64,
+    height: '100%',
     width: '100%',
     maxWidth: '100%',
     paddingTop: theme.spacing(4),

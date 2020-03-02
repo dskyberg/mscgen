@@ -43,7 +43,6 @@ export function renderPreview(onError) {
 
 const styles = theme => ({
     root: {
-        display: "block",
         overflow: 'auto',
     },
     error: {

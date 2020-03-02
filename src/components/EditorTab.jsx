@@ -9,6 +9,9 @@ import "ace-builds/src-noconflict/theme-xcode";
 import editorConfig from '../store/EditorConfig'
 
 const styles = theme => ({
+  wrapper: {
+    height: '100%',
+  },
   errorMarker: {
     position: 'absolute',
     background: 'rgba(100,200,100,0.5)',
@@ -53,8 +56,8 @@ class EditorTab extends React.Component {
     const config = editorConfig.config
     const markers = this.makeMarkers(classes, error)
     return (
-        <div  >
-          <AceEditor width="1200" maxLines={Infinity} onChange={ onChange } onLoad={onLoad} value={ content } markers={ markers } setOptions={ options } {...config}/>
+        <div  className={classes.wrapper}>
+          <AceEditor width="1200" height="100%" maxLines={Infinity} onChange={ onChange } onLoad={onLoad} value={ content } markers={ markers } setOptions={ options } {...config}/>
         </div>
     )
   }
