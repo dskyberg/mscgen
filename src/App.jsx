@@ -17,35 +17,29 @@ import { saveAs } from 'file-saver'
 
 import msc_config from './store/MSC_Config'
 import editorConfig from './store/EditorConfig'
+import getViewportSize from './util/getViewportSize'
 
+console.log('Viewport in App.jsx', getViewportSize())
 
 const styles = theme => ({
   root: {
-    height: '100%',
+    height: getViewportSize(window).height,
     display: 'flex',
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    display: 'flex',
-    flexGrow: 1,
+    overflow: 'hidden',
   },
   container: {
-    marginTop: 64,
-    height: '100%',
+    height: getViewportSize(window).height-64,
+    maxHeight: getViewportSize(window).height-64,
+    position: 'absolute',
+    top:64,
+    overflow: 'hidden',
     width: '100%',
     maxWidth: '100%',
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-    paddingLeft: 0,
-    paddingRight: 0,
-  },
-  grid: {
-    display: 'flex'
-  },
-  gridItem: {
+    padding: 0,
   },
   splitPane: {
     marginLeft: 64,
+    height: '100%',
   },
 });
 
@@ -60,6 +54,7 @@ class App extends React.Component {
       openFileDialogOpen: false,
       settingsDialogOpen: false,
     }
+
   }
 
   handleSettingsClick = () => {
@@ -164,14 +159,12 @@ class App extends React.Component {
       <div className={ classes.root }>
         <AppHeader title="MSCGen" onDrawerClick={ this.handleDrawerOpen }  open={ drawerOpen } onSettingsClick={this.handleSettingsClick}/>
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
-        <main className={ classes.content }>
           <Container  className={ classes.container }>
-          <Splitter open={drawerOpen }>
-              <EditorTab onChange={ this.handleEditorChange } content={ content } error={ error } />
-              <PreviewTab onError={this.handleRenderError}/>
-            </Splitter>
+            <Splitter open={drawerOpen }>
+                <EditorTab onChange={ this.handleEditorChange } content={ content } error={ error } />
+                <PreviewTab onError={this.handleRenderError}/>
+              </Splitter>
           </Container>
-        </main>
         <OpenFileDialog open={ openFileDialogOpen } onClose={ this.handleOpenFile } />
         <SettingsDialog open={settingsDialogOpen} onClose={this.handleSettingsClosed}/>
         <Message open={ snackbarOpen } onClose={ this.handleSnackbarClose } message={ snackbarMsg } />

@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import msc_config from '../store/MSC_Config'
 import editorConfig from '../store/EditorConfig'
+import getViewportSize from '../util/getViewportSize'
 
 
 function localRenderPreview(onError) {
@@ -45,8 +46,15 @@ export function renderPreview(onError) {
 
 
 const styles = theme => ({
-    root: {
+    svg_wrapper: {
+        // Total hack that is NOT responsive.  But solves the problem now
+        // of making the wrapper scrollable.
+        height: getViewportSize().height-64,
         overflow: 'auto',
+    },
+    svg: {
+        display: 'block',
+        boxSizing: 'inherit',
     },
     error: {
         padding: theme.spacing(2)
@@ -96,8 +104,8 @@ class PreviewTab extends React.Component {
         const error = msc_config.error
         const errorState = Boolean(error)
         return (
-            <div id="svg_wrapper" className={ classes.root } onClick={this.handleRenderClicked}>
-              <div hidden={ errorState } id="__svg" className={ classes.root }></div>
+            <div id="svg_wrapper" className={ classes.svg_wrapper } onClick={this.handleRenderClicked}>
+              <div hidden={ errorState } id="__svg" className={ classes.svg }></div>
               { this.displayError(error) }
             </div>
         )

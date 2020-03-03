@@ -104,6 +104,8 @@ const Wrapper = styled.div`
     -webkit-flex: 1;
     -ms-flex: 1;
     flex: 1;
+    height: 100%;
+    max-height: 100%
   }
 `;
 
@@ -115,8 +117,10 @@ const styles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    overflow: 'hidden',
   },
   splitPaneClose: {
+    overflow: 'hidden',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
