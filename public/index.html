@@ -29,7 +29,56 @@
             overscroll-behavior: none;
             height: 100%;
         }
-        
+
+        .Resizer {
+            box-sizing: border-box;
+            background: #000;
+            opacity: 0.8;
+            z-index: 1;
+            background-clip: padding-box;
+        }
+
+        .Resizer:hover {
+            transition: all 2s ease;
+        }
+
+        .Resizer.vertical {
+            width: 11px;
+            margin: 0 -5px;
+            border-left: 5px solid rgba(255, 255, 255, 0);
+            border-right: 5px solid rgba(255, 255, 255, 0);
+            cursor: col-resize;
+        }
+
+        .Resizer.vertical:hover {
+            border-left: 5px solid rgba(0, 0, 0, 0.5);
+            border-right: 5px solid rgba(0, 0, 0, 0.5);
+        }
+
+        .vertical section {
+            width: 100vh;
+            height: 100vh;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .vertical header {
+            padding: 1rem;
+            background: #eee;
+        }
+
+        .vertical footer {
+            padding: 1rem;
+            background: #eee;
+        }
+
         #root {
             height: inherit;
             overflow: hidden;
