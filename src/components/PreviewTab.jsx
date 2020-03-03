@@ -105,10 +105,12 @@ class PreviewTab extends React.Component {
         const errorState = Boolean(error)
         return (
             <div id="svg_wrapper" className={ classes.svg_wrapper } onClick={this.handleRenderClicked}>
-              <div hidden={ errorState } id="__svg" className={ classes.svg }></div>
+              <div hidden={ errorState } id="__svg" ></div>
               { this.displayError(error) }
             </div>
         )
     }
 }
 export default PreviewTab
+/*
+*/

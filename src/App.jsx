@@ -8,7 +8,7 @@ import Container from '@material-ui/core/Container';
 import AppHeader from './components/AppHeader'
 import AppDrawer from './components/AppDrawer';
 import EditorTab from './components/EditorTab'
-import PreviewTab, {renderPreview} from './components/PreviewTab'
+import PreviewTab, { renderPreview } from './components/PreviewTab'
 import OpenFileDialog from './components/OpenFileDialog'
 import SettingsDialog from './components/SettingsDialog'
 import Splitter from './components/Splitter'
@@ -28,10 +28,10 @@ const styles = theme => ({
     overflow: 'hidden',
   },
   container: {
-    height: getViewportSize(window).height-64,
-    maxHeight: getViewportSize(window).height-64,
+    height: getViewportSize(window).height - 64,
+    maxHeight: getViewportSize(window).height - 64,
     position: 'absolute',
-    top:64,
+    top: 64,
     overflow: 'hidden',
     width: '100%',
     maxWidth: '100%',
@@ -58,18 +58,26 @@ class App extends React.Component {
   }
 
   handleSettingsClick = () => {
-    this.setState({settingsDialogOpen: true})
+    this.setState({
+      settingsDialogOpen: true
+    })
   }
 
   handleSettingsClosed = () => {
-    this.setState({settingsDialogOpen: false})
+    this.setState({
+      settingsDialogOpen: false
+    })
   }
 
   handleDrawerOpen = () => {
-    this.setState({drawerOpen: true})
+    this.setState({
+      drawerOpen: true
+    })
   };
   handleDrawerClose = () => {
-    this.setState({drawerOpen: false})
+    this.setState({
+      drawerOpen: false
+    })
   };
 
   handleSnackbarClose = (event, reason) => {
@@ -121,17 +129,14 @@ class App extends React.Component {
     if (item === 'reset') {
       editorConfig.resetEditor()
       renderPreview(this.handleEditorChange)
-    }
-    else if (item === 'open') {
+    } else if (item === 'open') {
       this.setState({
         openFileDialogOpen: true
       })
-    }
-    else if (item === 'save') {
+    } else if (item === 'save') {
       this.saveEditorToFile();
       this.savePreviewToFile();
-    }
-    else {
+    } else {
       console.log('handleDrawerItem received unknow command', item)
     }
   }
@@ -144,7 +149,7 @@ class App extends React.Component {
     this.setState({
       openFileDialogOpen: false
     })
-    if(value !== null){
+    if (value !== null) {
       this.saveEditorState(value)
     }
   }
@@ -157,16 +162,16 @@ class App extends React.Component {
 
     return (
       <div className={ classes.root }>
-        <AppHeader title="MSCGen" onDrawerClick={ this.handleDrawerOpen }  open={ drawerOpen } onSettingsClick={this.handleSettingsClick}/>
+        <AppHeader title="MSCGen" onDrawerClick={ this.handleDrawerOpen } open={ drawerOpen } onSettingsClick={ this.handleSettingsClick } />
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
-          <Container  className={ classes.container }>
-            <Splitter open={drawerOpen }>
-                <EditorTab onChange={ this.handleEditorChange } content={ content } error={ error } />
-                <PreviewTab onError={this.handleRenderError}/>
-              </Splitter>
-          </Container>
+        <Container className={ classes.container }>
+          <Splitter open={ drawerOpen }>
+            <EditorTab onChange={ this.handleEditorChange } content={ content } error={ error } />
+            <PreviewTab onError={ this.handleRenderError } />
+          </Splitter>
+        </Container>
         <OpenFileDialog open={ openFileDialogOpen } onClose={ this.handleOpenFile } />
-        <SettingsDialog open={settingsDialogOpen} onClose={this.handleSettingsClosed}/>
+        <SettingsDialog open={ settingsDialogOpen } onClose={ this.handleSettingsClosed } />
         <Message open={ snackbarOpen } onClose={ this.handleSnackbarClose } message={ snackbarMsg } />
       </div>
     )
