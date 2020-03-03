@@ -23,7 +23,7 @@ const styles = theme => ({
 });
 
 @observer
-class EditorTab extends React.Component {
+class EditorPane extends React.Component {
 
     static propTypes = {
       onChange: PropTypes.func.isRequired,
@@ -65,4 +65,4 @@ class EditorTab extends React.Component {
     )
   }
 }
-export default withStyles(styles)(EditorTab)
+export default withStyles(styles)(EditorPane)

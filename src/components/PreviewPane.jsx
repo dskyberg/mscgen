@@ -63,7 +63,7 @@ const styles = theme => ({
 
 @withStyles(styles)
 @observer
-class PreviewTab extends React.Component {
+class PreviewPane extends React.Component {
     static propTypes = {
         onError: PropTypes.func.isRequired
     }
@@ -111,6 +111,6 @@ class PreviewTab extends React.Component {
         )
     }
 }
-export default PreviewTab
+export default PreviewPane
 /*
 */

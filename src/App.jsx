@@ -7,8 +7,8 @@ import { withStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container';
 import AppHeader from './components/AppHeader'
 import AppDrawer from './components/AppDrawer';
-import EditorTab from './components/EditorTab'
-import PreviewTab, { renderPreview } from './components/PreviewTab'
+import EditorPane from './components/EditorPane'
+import PreviewPane, { renderPreview } from './components/PreviewPane'
 import OpenFileDialog from './components/OpenFileDialog'
 import SettingsDialog from './components/SettingsDialog'
 import Splitter from './components/Splitter'
@@ -18,8 +18,6 @@ import { saveAs } from 'file-saver'
 import msc_config from './store/MSC_Config'
 import editorConfig from './store/EditorConfig'
 import getViewportSize from './util/getViewportSize'
-
-console.log('Viewport in App.jsx', getViewportSize())
 
 const styles = theme => ({
   root: {
@@ -135,7 +133,7 @@ class App extends React.Component {
       })
     } else if (item === 'save') {
       this.saveEditorToFile();
-      this.savePreviewToFile();
+      msc_config.saveToFile();
     } else {
       console.log('handleDrawerItem received unknow command', item)
     }
@@ -166,8 +164,8 @@ class App extends React.Component {
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <Container className={ classes.container }>
           <Splitter open={ drawerOpen }>
-            <EditorTab onChange={ this.handleEditorChange } content={ content } error={ error } />
-            <PreviewTab onError={ this.handleRenderError } />
+            <EditorPane onChange={ this.handleEditorChange } content={ content } error={ error } />
+            <PreviewPane onError={ this.handleRenderError } />
           </Splitter>
         </Container>
         <OpenFileDialog open={ openFileDialogOpen } onClose={ this.handleOpenFile } />
