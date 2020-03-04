@@ -1,0 +1,14 @@
+{
+    "name": "mscgen-release",
+    "version": "0.1.0",
+    "description": "Release package",
+    "main": "index.js",
+    "scripts": {
+        "start": "node node_modules/.bin/serve -s build"
+    },
+    "author": "David Skyberg",
+    "license": "ISC",
+    "dependencies": {
+        "serve": "^11.3.0"
+    }
+}
