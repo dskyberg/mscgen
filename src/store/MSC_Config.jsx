@@ -3,6 +3,7 @@
 */
 import { observable, action, computed, toJS } from "mobx"
 import { saveAs } from 'file-saver'
+import editorConfig from './EditorConfig'
 
 const InputTypes = [
     'msgenny',
@@ -41,7 +42,15 @@ class MSC_Config {
             console.log('MSCConfig.setInputType: No value')
             return
         }
+        if(inputType === this.inputType) {
+            console.log('mscConfig.setInputType: no change')
+            return
+        }
         if(InputTypes.includes(inputType)) {
+            console.log('mscConfig.setInputType: changing to', inputType)
+            if(Boolean(editorConfig) && Boolean(editorConfig.editor)){
+                editorConfig.transpile(inputType, false)
+            }
             this.inputType = inputType
             return
         }

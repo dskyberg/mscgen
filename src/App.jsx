@@ -109,20 +109,25 @@ class App extends React.Component {
    * Each icon in the Drawer is handled
    */
   handleDrawerItem = (event, item) => {
-    if (item === 'reset') {
-      editorConfig.resetEditor()
-      renderPreview(this.handleEditorChange)
-    } else if (item === 'open') {
-      this.setState({
-        openFileDialogOpen: true
-      })
-    } else if (item === 'save') {
-      editorConfig.saveToFile();
-      mscConfig.saveToFile();
-    } else {
-      console.log('handleDrawerItem received unknow command', item)
+    switch(item) {
+      case 'reset': 
+        editorConfig.resetEditor();
+        renderPreview(this.handleEditorChange);
+        break;
+      case 'open':
+        this.setState({
+          openFileDialogOpen: true
+        });
+        break;
+       case 'save':
+        editorConfig.saveToFile();
+        mscConfig.saveToFile();
+        break;
+       default:
+        console.log('handleDrawerItem received unknow command', item)
+
     }
-  }
+ }
 
   /**
    * Once the user selects a file from the dialog popup,

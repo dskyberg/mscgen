@@ -1,9 +1,32 @@
-a -> b : ab();
-a => c : automatically declares entities used in arcs;
-c =>> c : process(1);
-b <<= c : Has all mscgen arc types... ;
-b note b: ...notes + boxes ...;
-|||;
---- : Labels usually don't need enclosing quotes;
---- : "except when they contain , or ;";
-...;
+width="auto",
+wordwraparcs=true;
+
+act : "Actor",
+browser : ":WebBrowser",
+app : "Application",
+fbauth : "Facebook Authorization Server",
+fbcont : "Facebook Content Server";
+
+act => browser : "get FB resource\nline 2";
+||| : "Here's a break";
+browser => app : "request FB access";
+app >> browser : "<<http redirect>>";
+browser => fbauth : "authorize";
+fbauth >> browser : "permission form";
+browser >> act : "permission form";
+act => browser : "user permission";
+browser => fbauth : "process permission";
+fbauth >> browser : "<<http redirect>>";
+act alt fbcont : "permission granted" {
+  browser => app : "FB authorization code";
+  app => fbauth : "FB authorization code";
+  fbauth >> app : "access token";
+  app => fbcont : "access FB user protected resource";
+  fbcont >> app : "protected resource";
+  app >> browser : "protected resource";
+  browser >> act : "protected resource";
+  --- : "no permission";
+  browser => app : "no authorization";
+  app >> browser : "FB resource not available";
+  browser >> act : "FB resource not available";
+};

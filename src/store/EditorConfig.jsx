@@ -232,6 +232,22 @@ class EditorConfig {
         }
       }
 
+     transpile(outputType, setPreviewInputType) {
+      try {
+        
+        let lResult = require('mscgenjs').translateMsc(
+            this.editor,{inputType: mscConfig.inputType, outputType: outputType })
+        mscConfig.setError(null)
+        mscConfig.setSvg(null)
+        if(Boolean(setPreviewInputType)) {
+            mscConfig.setConfig('inputType', outputType)
+        }
+        this.setEditor(lResult)
+        console.log(lResult);
+      } catch (pError) {
+        console.error(pError);
+      }
+    }
 }
 
 const editorConfig = new EditorConfig()

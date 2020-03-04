@@ -68,6 +68,8 @@ NumberFormatCustom.propTypes = {
 @observer
 class SettingsDialog extends React.Component {
 
+    
+
     handleChange = (config, name, elType) => event => {
         const t = event.target
         switch(elType) {
@@ -76,6 +78,7 @@ class SettingsDialog extends React.Component {
             default: config.setConfig(name, t.value); break;
         }
     }
+
 
     render() {
         const {open, onClose, classes} = this.props
