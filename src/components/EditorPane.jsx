@@ -14,6 +14,7 @@ import editorConfig from '../store/EditorConfig'
 const styles = theme => ({
   wrapper: {
     height: '100%',
+    overflow: 'auto',
   },
   errorMarker: {
     position: 'absolute',
