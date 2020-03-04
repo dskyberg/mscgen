@@ -38,7 +38,7 @@ class EditorPane extends React.Component {
     }
 
     makeMarkers = (classes, error) => {
-      if(error === null) {
+      if(!(Boolean(error) && Boolean(error.location)) ) {
         return []
       }
 

@@ -7,13 +7,13 @@ import { observer } from 'mobx-react'
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
-import msc_config from '../store/MSC_Config'
+import mscConfig from '../store/MSC_Config'
 import editorConfig from '../store/EditorConfig'
 import getViewportSize from '../util/getViewportSize'
 
 
 function localRenderPreview(onError) {
-    const config = msc_config.config
+    const config = mscConfig.config
     const script = editorConfig.editor
     document.getElementById('__svg').innerHTML = ''
     require('mscgenjs').renderMsc(
@@ -21,8 +21,8 @@ function localRenderPreview(onError) {
         config,
         (pError, pSuccess) => {
             if (Boolean(pError)) {
-                msc_config.setSvg(null)
-                msc_config.setError(pError)
+                mscConfig.setSvg(null)
+                mscConfig.setError(pError)
                 if(onError){
                     onError(pError)
                 }
@@ -30,8 +30,8 @@ function localRenderPreview(onError) {
             }
             if (Boolean(pSuccess)) {
                 // pSuccess holds the svg
-                msc_config.setError(null)
-                msc_config.setSvg(pSuccess)
+                mscConfig.setError(null)
+                mscConfig.setSvg(pSuccess)
                 return;
             }
             console.log('Wat! Error nor success?');
@@ -39,7 +39,7 @@ function localRenderPreview(onError) {
     );
 }
 export function renderPreview(onError) {
-    if(msc_config.autoRender){
+    if(mscConfig.autoRender){
         localRenderPreview(onError)
     }
 }
@@ -73,20 +73,22 @@ class PreviewPane extends React.Component {
     }
 
     displayError = (error) => {
-        if (error === null || error === undefined) {
+        if (!Boolean(error)) {
             return null
         }
-
+        const name = Boolean(error.name) ? error.name : 'No name'
+        const message = Boolean(error.message) ? error.message : 'No message'
+        const startLine = Boolean(error.location) ? error.location.start.line : 'Unknown'
         return (
             <Paper className={ this.props.classes.error }>
               <Typography variant="h4">
-                { error.name }
+                { name }
               </Typography>
               <Typography>Line:
-                { error.location.start.line }
+                { startLine }
               </Typography>
               <Typography>
-                { error.message }
+                { message }
               </Typography>
             </Paper>
         )
@@ -94,14 +96,14 @@ class PreviewPane extends React.Component {
 
     handleRenderClicked = (event) => {
         event.stopPropagation()
-        if(!msc_config.autoRender){
+        if(!mscConfig.autoRender){
             localRenderPreview(this.props.onError)
         }
     }
 
     render() {
         const {classes} = this.props
-        const error = msc_config.error
+        const error = mscConfig.error
         const errorState = Boolean(error)
         return (
             <div id="svg_wrapper" className={ classes.svg_wrapper } onClick={this.handleRenderClicked}>

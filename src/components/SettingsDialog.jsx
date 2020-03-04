@@ -23,7 +23,7 @@ import TextField from '@material-ui/core/TextField'
 import Switch from '@material-ui/core/Switch';
 
 import editorConfig from '../store/EditorConfig'
-import msc_config from '../store/MSC_Config'
+import mscConfig from '../store/MSC_Config'
 
 const styles = theme => ({
     dialogContent: {
@@ -228,10 +228,10 @@ class SettingsDialog extends React.Component {
                                     <Select
                                         labelId="msc-inputType-label"
                                         id="msc-inputType"
-                                        value={msc_config.inputType}
-                                        onChange={this.handleChange(msc_config,'inputType','select')}>
+                                        value={mscConfig.inputType}
+                                        onChange={this.handleChange(mscConfig,'inputType','select')}>
                                         <MenuItem value={'mscgen'}>mscgen</MenuItem>
-                                        <MenuItem value={'mscgenny'}>mscgenny</MenuItem>
+                                        <MenuItem value={'msgenny'}>msgenny</MenuItem>
                                         <MenuItem value={'xu'}>xu</MenuItem>
                                         <MenuItem value={'json'}>json</MenuItem>
                                     </Select>
@@ -241,8 +241,8 @@ class SettingsDialog extends React.Component {
                                     <Select
                                         labelId="msc-additionalTemplate-label"
                                         id="msc-additionalTemplate"
-                                        value={msc_config.additionalTemplate}
-                                        onChange={this.handleChange(msc_config,'additionalTemplate','select')}>
+                                        value={mscConfig.additionalTemplate}
+                                        onChange={this.handleChange(mscConfig,'additionalTemplate','select')}>
                                         <MenuItem value={'lazy'}>lazy</MenuItem>
                                         <MenuItem value={'classic'}>classic</MenuItem>
                                         <MenuItem value={'empty'}>empty</MenuItem>
@@ -253,8 +253,8 @@ class SettingsDialog extends React.Component {
                                     <Select
                                         labelId="msc-regularArcTextVerticalAlignment-label"
                                         id="msc-regularArcTextVerticalAlignment"
-                                        value={msc_config.regularArcTextVerticalAlignment}
-                                        onChange={this.handleChange(msc_config,'regularArcTextVerticalAlignment','select')}>
+                                        value={mscConfig.regularArcTextVerticalAlignment}
+                                        onChange={this.handleChange(mscConfig,'regularArcTextVerticalAlignment','select')}>
                                         <MenuItem value={'above'}>above</MenuItem>
                                         <MenuItem value={'middle'}>middle</MenuItem>
                                         <MenuItem value={'below'}>below</MenuItem>
@@ -265,10 +265,10 @@ class SettingsDialog extends React.Component {
                                     label="Mirror entities"
                                     labelPlacement="start"
                                     control={< Switch id = "msc-mirrorEntitiesOnBottom" checked = {
-                                    msc_config.mirrorEntitiesOnBottom
+                                    mscConfig.mirrorEntitiesOnBottom
                                 }
                                 onChange = {
-                                    this.handleChange(msc_config, 'mirrorEntitiesOnBottom', 'switch')
+                                    this.handleChange(mscConfig, 'mirrorEntitiesOnBottom', 'switch')
                                 }
                                 value = "mirrorEntitiesOnBottom" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
 
@@ -276,10 +276,10 @@ class SettingsDialog extends React.Component {
                                     label="Auto Render"
                                     labelPlacement="start"
                                     control={< Switch id = "msc-autoRender" checked = {
-                                    msc_config.autoRender
+                                    mscConfig.autoRender
                                 }
                                 onChange = {
-                                    this.handleChange(msc_config, 'autoRender', 'switch')
+                                    this.handleChange(mscConfig, 'autoRender', 'switch')
                                 }
                                 value = "autoRender" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
 
@@ -287,10 +287,10 @@ class SettingsDialog extends React.Component {
                                     label="Include source"
                                     labelPlacement="start"
                                     control={< Switch id = "msc-includeSource" checked = {
-                                    msc_config.includeSource
+                                    mscConfig.includeSource
                                 }
                                 onChange = {
-                                    this.handleChange(msc_config,'includeSource','switch')
+                                    this.handleChange(mscConfig,'includeSource','switch')
                                 }
                                 value = "includeSource" inputProps = {{ 'aria-label': 'secondary checkbox' }}/>}/>
 

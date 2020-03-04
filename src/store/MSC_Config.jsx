@@ -2,10 +2,18 @@
     Copyright (c) 2020 by David Skyberg
 */
 import { observable, action, computed, toJS } from "mobx"
+import { saveAs } from 'file-saver'
+
+const InputTypes = [
+    'msgenny',
+    'mscgen',
+    'xu',
+    'json'
+]
 
 class MSC_Config {
     @observable elementId = "__svg"
-    @observable inputType = "xu" // mscgen, mscgenny, xu, json
+    @observable inputType = "xu" // mscgen, msgenny, xu, json
     @observable mirrorEntitiesOnBottom = true
     @observable additionalTemplate = 'lazy' // lazy, classic, empty
     @observable includeSource = false
@@ -20,11 +28,24 @@ class MSC_Config {
     }
 
     @action setSvg(svg) {
-        this.svg = svg
+        this.svg = Boolean(svg) ? svg : null
     }
 
     @action setError(error) {
-        this.error = error
+        this.error = Boolean(error) ? error : null
+    }
+
+    @action
+    setInputType(inputType) {
+        if(!Boolean(inputType)){
+            console.log('MSCConfig.setInputType: No value')
+            return
+        }
+        if(InputTypes.includes(inputType)) {
+            this.inputType = inputType
+            return
+        }
+        throw new Error(`MSC_Config.setInputType: invalid type: ${inputType}`)
     }
 
 
@@ -48,7 +69,7 @@ class MSC_Config {
     setConfigValue(name, value) {
         switch(name) {
             case 'elementId': this.elementId = value; break;
-            case 'inputType': this.inputType = value; break;
+            case 'inputType': this.setInputType(value); break;
             case 'mirrorEntitiesOnBottom': this.mirrorEntitiesOnBottom = value; break;
             case 'additionalTemplate': this.additionalTemplate = value; break;
             case 'includeSource': this.includeSource = value; break;
@@ -79,7 +100,39 @@ class MSC_Config {
         }
     }
 
+    /**
+     * Provide the correct file extension by script type
+     */
+    fileType() {
+        // mscgen, mscgenny, xu, json
+        if(this.inputType === 'msgenny'){
+            return 'msgenny'
+        }
+        if(this.inputType === 'json') {
+            return 'json'
+        }
+        if(this.inputType === 'xu'){
+            return 'xu'
+        }
+        return 'mscgen'
+    }
+
+    /**
+     * Save the rendered SVG to a file.
+     * If a name is provided, the file is saved as `${name}.svg`
+     * If no name is provided, the current time stamp is used.
+     */
+    saveToFile(name) {
+        const payload = this.svg
+        const blob = new Blob([payload], {
+          type: "image/svg+xml"
+        });
+        // Save the blob to a local file
+        const fileName = Boolean(name) ? `${name}.svg` : `${Math.floor(Date.now() / 1000)}.svg`
+        saveAs(blob, fileName);
+      }
+
 }
 
-const msc_config = new MSC_Config()
-export default msc_config
+const mscConfig = new MSC_Config()
+export default mscConfig

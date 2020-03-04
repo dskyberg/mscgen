@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button'
+import editorConfig from '../store/EditorConfig'
 
 
 export default function OpenFileDialog(props) {
@@ -16,21 +17,9 @@ export default function OpenFileDialog(props) {
     onClose(null);
   };
 
-  let fileReader
-
-  const handleFileRead = e => {
-    const content = fileReader.result
-    onClose(content);
-  }
 
   const handleChange = (event) => {
-    fileReader = new FileReader()
-    fileReader.onloadend = handleFileRead
-    try {
-      fileReader.readAsText(event.target.files[0])
-    } catch (error) {
-      console.log(error)
-    }
+    editorConfig.openFile(event.target.files[0], onClose)
   }
 
 

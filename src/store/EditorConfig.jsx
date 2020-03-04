@@ -2,6 +2,10 @@
     Copyright (c) 2020 by David Skyberg
 */
 import { observable, action, computed, toJS } from "mobx"
+import { saveAs } from 'file-saver'
+import parsePath from 'parse-filepath'
+import mscConfig from './MSC_Config'
+
 
 export const modes = [
     'ABAP',
@@ -35,7 +39,7 @@ export const modes = [
     'Elixir'
 ]
 
-export const editorDefault = `msc {
+const mscDefault = `msc {
         # Options
         wordwraparcs=true,
         width=auto;
@@ -64,6 +68,16 @@ export const editorDefault = `msc {
         };
   }`;
 
+const msgennyDefault = `a -> b : ab();
+  a => c : automatically declares entities used in arcs;
+  c =>> c : process(1);
+  b <<= c : Has all mscgen arc types... ;
+  b note b: ...notes + boxes ...;
+  |||;
+  --- : Labels usually don't need enclosing quotes;
+  --- : "except when they contain , or ;";
+  ...;
+  `
 
 class EditorConfig {
     @observable editor = ""
@@ -94,7 +108,11 @@ class EditorConfig {
 
     @action
     resetEditor() {
-        this.setEditor(editorDefault)
+        const inputType = mscConfig.inputType
+        switch(inputType) {
+            case 'msgenny': this.setEditor(msgennyDefault); break;
+            default: this.setEditor(mscDefault); break;
+        }
     }
 
     @computed get config() {
@@ -169,6 +187,51 @@ class EditorConfig {
             })
         }
     }
+
+    /**
+     * Save the rendered SVG to a file.
+     * The extension will match the script type.
+     * If a name is provided, the file is saved as `${name}.${type}`
+     * If no name is provided, the current time stamp is used.
+     */
+    saveToFile(name) {
+        const payload = editorConfig.editor
+        const blob = new Blob([payload], {
+          type: "text/plain;charset=utf-8"
+        });
+        // Save the blob to a local file
+        const ext = mscConfig.fileType()
+        const fileName = Boolean(name) ? `${name}.${ext}` : `${Math.floor(Date.now() / 1000)}.${ext}`
+        saveAs(blob, `${Math.floor(Date.now() / 1000)}.${ext}`);
+      }
+
+      openFile(file, onClose) {
+          if(!Boolean(file)){
+              if(Boolean(onClose)){
+                  onClose()
+              }
+              console.log('Error: No filename to open')
+              return
+          }
+
+        const fileReader = new FileReader()
+        fileReader.onloadend = (e) => {
+            const content = fileReader.result
+            const ext =  parsePath(file.name).ext.slice(1)
+            mscConfig.setError(null)
+            mscConfig.setSvg(null)
+            mscConfig.setConfig('inputType', ext)
+            this.setEditor(content)
+            onClose(file);
+          }
+
+        try {
+          fileReader.readAsText(file)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
 }
 
 const editorConfig = new EditorConfig()

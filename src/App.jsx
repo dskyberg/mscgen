@@ -13,9 +13,8 @@ import OpenFileDialog from './components/OpenFileDialog'
 import SettingsDialog from './components/SettingsDialog'
 import Splitter from './components/Splitter'
 import Message from './components/Message'
-import { saveAs } from 'file-saver'
 
-import msc_config from './store/MSC_Config'
+import mscConfig from './store/MSC_Config'
 import editorConfig from './store/EditorConfig'
 import getViewportSize from './util/getViewportSize'
 
@@ -105,24 +104,10 @@ class App extends React.Component {
     this.saveEditorState(newState)
   }
 
-  saveEditorToFile() {
-    const payload = editorConfig.editor
-    const blob = new Blob([payload], {
-      type: "text/plain;charset=utf-8"
-    });
-    // Save the blob to a local file
-    saveAs(blob, `${Math.floor(Date.now() / 1000)}.xu`);
-  }
-
-  savePreviewToFile() {
-    const payload = msc_config.svg
-    const blob = new Blob([payload], {
-      type: "text/plain;charset=utf-8"
-    });
-    // Save the blob to a local file
-    saveAs(blob, `${Math.floor(Date.now() / 1000)}.svg`);
-  }
-
+  /**
+   * Drawer item handler
+   * Each icon in the Drawer is handled
+   */
   handleDrawerItem = (event, item) => {
     if (item === 'reset') {
       editorConfig.resetEditor()
@@ -132,8 +117,8 @@ class App extends React.Component {
         openFileDialogOpen: true
       })
     } else if (item === 'save') {
-      this.saveEditorToFile();
-      msc_config.saveToFile();
+      editorConfig.saveToFile();
+      mscConfig.saveToFile();
     } else {
       console.log('handleDrawerItem received unknow command', item)
     }
@@ -148,15 +133,14 @@ class App extends React.Component {
       openFileDialogOpen: false
     })
     if (value !== null) {
-      this.saveEditorState(value)
-    }
+      renderPreview(this.handleRenderError)}
   }
 
   render() {
     const {classes} = this.props
     const {drawerOpen, snackbarOpen, snackbarMsg, openFileDialogOpen, settingsDialogOpen} = this.state
     const content = editorConfig.editor
-    const error = msc_config.error
+    const error = mscConfig.error
 
     return (
       <div className={ classes.root }>
