@@ -110,7 +110,7 @@ class App extends React.Component {
    */
   handleDrawerItem = (event, item) => {
     switch(item) {
-      case 'reset': 
+      case 'reset':
         editorConfig.resetEditor();
         renderPreview(this.handleEditorChange);
         break;
@@ -149,7 +149,7 @@ class App extends React.Component {
 
     return (
       <div className={ classes.root }>
-        <AppHeader title="MSCGen" onDrawerClick={ this.handleDrawerOpen } open={ drawerOpen } onSettingsClick={ this.handleSettingsClick } />
+        <AppHeader title="MSC Generator" onDrawerClick={ this.handleDrawerOpen } open={ drawerOpen } onSettingsClick={ this.handleSettingsClick } />
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <Container className={ classes.container }>
           <Splitter open={ drawerOpen }>

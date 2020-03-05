@@ -32,6 +32,10 @@ const styles = theme => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    logo: {
+        maxWidth: 36,
+        marginRight: 20,
+      },
     menuButton: {
         marginRight: 36,
     },
@@ -55,6 +59,7 @@ class AppHeader extends React.Component {
                 <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={ onDrawerClick } className={ clsx(classes.menuButton, open && classes.menuButtonHidden) }>
                   <MenuIcon />
                 </IconButton>
+                <img src="logo.png" alt="logo" className={classes.logo} />
                 <Tltle className={ classes.title }>
                   {title}
                 </Tltle>
