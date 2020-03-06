@@ -166,10 +166,17 @@ class EditorConfig {
         localStorage.setItem('editor-options', JSON.stringify(this.options))
     }
 
+    /**
+     * Loads the saved editor and config from localStorage.
+     * As a quick hack, if there is no saved state, then load
+     * the msc/xu default doc.
+     */
     getStoredState() {
         const savedEditor = localStorage.getItem('editor')
-        if(savedEditor !== null) {
+        if(Boolean(savedEditor)) {
             this.editor = savedEditor
+        } else {
+            this.editor = mscDefault
         }
 
         const configStr = localStorage.getItem('editor-config')
@@ -234,7 +241,7 @@ class EditorConfig {
 
      transpile(outputType, setPreviewInputType) {
       try {
-        
+
         let lResult = require('mscgenjs').translateMsc(
             this.editor,{inputType: mscConfig.inputType, outputType: outputType })
         mscConfig.setError(null)
