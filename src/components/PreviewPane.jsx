@@ -10,13 +10,24 @@ import Paper from '@material-ui/core/Paper'
 import mscConfig from '../store/MSC_Config'
 import editorConfig from '../store/EditorConfig'
 import getViewportSize from '../util/getViewportSize'
+import {renderMsc} from 'mscgenjs'
 
-
+/**
+ *
+ * @param {function} onError
+ */
 function localRenderPreview(onError) {
     const config = mscConfig.config
-    const script = editorConfig.editor
-    document.getElementById('__svg').innerHTML = ''
-    require('mscgenjs').renderMsc(
+    const script = editorConfig.value
+    const elem = document.getElementById('__svg')
+    if(!Boolean(elem)) {
+        // The __svg div doesn't appear to exist.  Bale out
+        throw new Error("Can't find id of target element to render to")
+    }
+    // Always clear the existing svg, or we get some strange overlay conditions
+    elem.innerHTML = ''
+
+    renderMsc(
         script,
         config,
         (pError, pSuccess) => {
@@ -38,6 +49,11 @@ function localRenderPreview(onError) {
         }
     );
 }
+
+/**
+ * Called by App.jsx
+ * @param {function} onError Error callback
+ */
 export function renderPreview(onError) {
     if(mscConfig.autoRender){
         localRenderPreview(onError)

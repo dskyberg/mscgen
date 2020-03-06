@@ -48,7 +48,7 @@ class MSC_Config {
         }
         if(InputTypes.includes(inputType)) {
             console.log('mscConfig.setInputType: changing to', inputType)
-            if(Boolean(editorConfig) && Boolean(editorConfig.editor)){
+            if(Boolean(editorConfig) && Boolean(editorConfig.value)){
                 editorConfig.transpile(inputType, false)
             }
             this.inputType = inputType
@@ -101,11 +101,13 @@ class MSC_Config {
 
     getStoredState() {
         const configStr = localStorage.getItem('msc-config')
-        if(configStr !== null) {
+        if(Boolean(configStr)) {
             const config = JSON.parse(configStr)
             Object.keys(config).forEach(key => {
                 this.setConfigValue(key, config[key])
             })
+        } else {
+            localStorage.setItem('msc-config', JSON.stringify(this.config))
         }
     }
 

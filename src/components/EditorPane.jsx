@@ -55,7 +55,7 @@ class EditorPane extends React.Component {
 
     render() {
     const {onChange, onLoad, classes, error} = this.props
-    const content = editorConfig.editor
+    const content = editorConfig.value
     const options = editorConfig.options
     const config = editorConfig.config
     const markers = this.makeMarkers(classes, error)

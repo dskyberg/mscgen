@@ -19,7 +19,7 @@ import editorConfig from './store/EditorConfig'
 import getViewportSize from './util/getViewportSize'
 
 const styles = theme => ({
-  root: {
+  app_root: {
     height: getViewportSize(window).height,
     display: 'flex',
     overflow: 'hidden',
@@ -51,7 +51,6 @@ class App extends React.Component {
       openFileDialogOpen: false,
       settingsDialogOpen: false,
     }
-
   }
 
   handleSettingsClick = () => {
@@ -95,13 +94,12 @@ class App extends React.Component {
     })
   }
 
-  saveEditorState = (newState) => {
-    editorConfig.setEditor(newState)
-    renderPreview(this.handleRenderError)
-  }
-
+  /**
+   * Passed to AceEditor as onChange.
+   */
   handleEditorChange = newState => {
-    this.saveEditorState(newState)
+    editorConfig.setValue(newState)
+    renderPreview(this.handleRenderError)
   }
 
   /**
@@ -112,7 +110,7 @@ class App extends React.Component {
     switch(item) {
       case 'reset':
         editorConfig.resetEditor();
-        renderPreview(this.handleEditorChange);
+        renderPreview(this.handleRenderError);
         break;
       case 'open':
         this.setState({
@@ -141,14 +139,22 @@ class App extends React.Component {
       renderPreview(this.handleRenderError)}
   }
 
+  /**
+   * When the Ace Editor instance is about to load,
+   * get a pointer to it
+   */
+  handleOnBeforeLoad = (editor) => {
+    editorConfig.setEditor(editor)
+  }
+
   render() {
     const {classes} = this.props
     const {drawerOpen, snackbarOpen, snackbarMsg, openFileDialogOpen, settingsDialogOpen} = this.state
-    const content = editorConfig.editor
+    const content = editorConfig.value
     const error = mscConfig.error
 
     return (
-      <div className={ classes.root }>
+      <div className={ classes.app_root }>
         <AppHeader title="MSC Generator" onDrawerClick={ this.handleDrawerOpen } open={ drawerOpen } onSettingsClick={ this.handleSettingsClick } />
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <Container className={ classes.container }>

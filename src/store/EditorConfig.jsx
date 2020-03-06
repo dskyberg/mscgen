@@ -80,7 +80,8 @@ const msgennyDefault = `a -> b : ab();
   `
 
 class EditorConfig {
-    @observable editor = ""
+    @observable editor = null
+    @observable value = ""
     @observable mode = 'javascript'
     @observable theme = 'xcode'
     @observable fontSize = 14
@@ -101,17 +102,22 @@ class EditorConfig {
     }
 
     @action
-    setEditor(value) {
-        this.editor = value
-        localStorage.setItem('editor', value)
+    setEditor(editor) {
+        this.editor = editor
+    }
+
+    @action
+    setValue(value) {
+        this.value = value
+        localStorage.setItem('value', value)
     }
 
     @action
     resetEditor() {
         const inputType = mscConfig.inputType
         switch(inputType) {
-            case 'msgenny': this.setEditor(msgennyDefault); break;
-            default: this.setEditor(mscDefault); break;
+            case 'msgenny': this.setValue(msgennyDefault); break;
+            default: this.setValue(mscDefault); break;
         }
     }
 
@@ -167,43 +173,47 @@ class EditorConfig {
     }
 
     /**
-     * Loads the saved editor and config from localStorage.
+     * Loads the saved value and config from localStorage.
      * As a quick hack, if there is no saved state, then load
      * the msc/xu default doc.
      */
     getStoredState() {
-        const savedEditor = localStorage.getItem('editor')
-        if(Boolean(savedEditor)) {
-            this.editor = savedEditor
+        const savedValue = localStorage.getItem('value')
+        if(Boolean(savedValue)) {
+            this.value = savedValue
         } else {
-            this.editor = mscDefault
+            this.setValue(mscDefault)
         }
 
         const configStr = localStorage.getItem('editor-config')
-        if(configStr !== null) {
+        if(Boolean(configStr)) {
             const config = JSON.parse(configStr)
             Object.keys(config).forEach(key => {
                 this.setConfigValue(key, config[key])
             })
+        } else {
+            localStorage.setItem('editor-config', JSON.stringify(this.config))
         }
         const optionsStr = localStorage.getItem('editor-options')
-        if(optionsStr !== null) {
+        if(Boolean(optionsStr)) {
             const options = JSON.parse(optionsStr)
             Object.keys(options).forEach(key => {
                 this.setConfigValue(key, options[key])
             })
+        } else {
+            localStorage.setItem('editor-options', JSON.stringify(this.options))
         }
     }
 
     /**
-     * Save the rendered SVG to a file.
+     * Save the editor contents to a file.
      * The extension will match the script type.
      * If a name is provided, the file is saved as `${name}.${type}`
      * If no name is provided, the current time stamp is used.
      */
     saveToFile(name) {
-        const payload = editorConfig.editor
-        const blob = new Blob([payload], {
+
+        const blob = new Blob([this.value], {
           type: "text/plain;charset=utf-8"
         });
         // Save the blob to a local file
@@ -228,7 +238,7 @@ class EditorConfig {
             mscConfig.setError(null)
             mscConfig.setSvg(null)
             mscConfig.setConfig('inputType', ext)
-            this.setEditor(content)
+            this.setValue(content)
             onClose(file);
           }
 
@@ -243,13 +253,13 @@ class EditorConfig {
       try {
 
         let lResult = require('mscgenjs').translateMsc(
-            this.editor,{inputType: mscConfig.inputType, outputType: outputType })
+            this.value,{inputType: mscConfig.inputType, outputType: outputType })
         mscConfig.setError(null)
         mscConfig.setSvg(null)
         if(Boolean(setPreviewInputType)) {
             mscConfig.setConfig('inputType', outputType)
         }
-        this.setEditor(lResult)
+        this.setValue(lResult)
         console.log(lResult);
       } catch (pError) {
         console.error(pError);
