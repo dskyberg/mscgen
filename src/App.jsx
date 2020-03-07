@@ -13,6 +13,8 @@ import OpenFileDialog from './components/OpenFileDialog'
 import SettingsDialog from './components/SettingsDialog'
 import Splitter from './components/Splitter'
 import Message from './components/Message'
+import ConfirmationDialog from './components/ConfirmationDialog'
+import SaveFileDialog from './components/SaveFileDialog'
 
 import mscConfig from './store/MSC_Config'
 import editorConfig from './store/EditorConfig'
@@ -50,6 +52,11 @@ class App extends React.Component {
       snackbarOpen: false,
       openFileDialogOpen: false,
       settingsDialogOpen: false,
+      cdTitle: null,
+      cdMessage: null,
+      cdOpen: false,
+      cdOnClose: null,
+      sfdOpen:false,
     }
   }
 
@@ -103,29 +110,62 @@ class App extends React.Component {
   }
 
   /**
+   * Sets values for ConfirmationDialog when reset is clicked in the drawer
+   */
+  handleConfirmReset = (value) => {
+    this.setState({cdOpen: false, cdTitle: null, cdMessage: null, cdOnClose: null})
+    if(Boolean(value)) {
+      editorConfig.resetEditor();
+      renderPreview(this.handleRenderError);
+    }
+  }
+
+  handleSaveFileDialog = (value) => {
+    this.setState({sfdOpen:false})
+    if(Boolean(value)) {
+      editorConfig.saveToFile();
+      mscConfig.saveToFile();
+    }
+  }
+
+  /**
    * Drawer item handler
    * Each icon in the Drawer is handled
    */
   handleDrawerItem = (event, item) => {
-    switch(item) {
+    switch (item) {
       case 'reset':
-        editorConfig.resetEditor();
-        renderPreview(this.handleRenderError);
+        this.setState({
+          cdOpen: true,
+          cdTitle: 'Reset Editor',
+          cdMessage: 'Clicking "OK" will result in all current work being lost',
+          cdOnClose: this.handleConfirmReset
+        })
         break;
       case 'open':
         this.setState({
           openFileDialogOpen: true
         });
         break;
-       case 'save':
-        editorConfig.saveToFile();
-        mscConfig.saveToFile();
+      case 'save':
+        this.setState({
+          sfdOpen: true
+        });
         break;
-       default:
+      case 'method':
+        editorConfig.addText('method');
+        break;
+      case 'signal':
+        editorConfig.addText('signal');
+        break;
+      case 'callback':
+        editorConfig.addText('callback');
+        break;
+      default:
         console.log('handleDrawerItem received unknow command', item)
 
     }
- }
+  }
 
   /**
    * Once the user selects a file from the dialog popup,
@@ -136,14 +176,15 @@ class App extends React.Component {
       openFileDialogOpen: false
     })
     if (value !== null) {
-      renderPreview(this.handleRenderError)}
+      renderPreview(this.handleRenderError)
+    }
   }
 
   /**
    * When the Ace Editor instance is about to load,
    * get a pointer to it
    */
-  handleOnBeforeLoad = (editor) => {
+  handleOnLoad = (editor) => {
     editorConfig.setEditor(editor)
   }
 
@@ -159,13 +200,20 @@ class App extends React.Component {
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <Container className={ classes.container }>
           <Splitter open={ drawerOpen }>
-            <EditorPane onChange={ this.handleEditorChange } content={ content } error={ error } />
+            <EditorPane onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
             <PreviewPane onError={ this.handleRenderError } />
           </Splitter>
         </Container>
         <OpenFileDialog open={ openFileDialogOpen } onClose={ this.handleOpenFile } />
         <SettingsDialog open={ settingsDialogOpen } onClose={ this.handleSettingsClosed } />
         <Message open={ snackbarOpen } onClose={ this.handleSnackbarClose } message={ snackbarMsg } />
+        <ConfirmationDialog
+          open={this.state.cdOpen}
+          title={this.state.cdTitle}
+          message={this.state.cdMessage}
+          onClose={this.state.cdOnClose}
+          />
+          <SaveFileDialog open={this.state.sfdOpen} onClose={this.handleSaveFileDialog} />
       </div>
     )
   };

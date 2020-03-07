@@ -8,7 +8,7 @@ export default function getViewportSize(w) {
 
     // For IE (or any browser) in Standards mode
     var d = w.document;
-    if (document.compatMode == "CSS1Compat")
+    if (document.compatMode === "CSS1Compat")
         return {
             width: d.documentElement.clientWidth,
             height: d.documentElement.clientHeight

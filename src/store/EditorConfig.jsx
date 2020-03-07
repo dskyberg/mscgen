@@ -79,6 +79,21 @@ const msgennyDefault = `a -> b : ab();
   ...;
   `
 
+  const arcTypes = {
+    solid: 'a -- b',
+    dotted: 'a .. b',
+    signal: 'a -> b',
+    bisignal: 'a <-> b',
+    method: 'a => b',
+    bimethod: 'a <=> b',
+    return: 'a >> b',
+    bireturn: 'a <<>> b',
+    callback: 'a =>> b',
+    bicallback: 'a <<=>> b',
+    emphasis: 'a :> b',
+    biemphasis: 'a <:> b',
+    lost: 'a -x b'
+}
 class EditorConfig {
     @observable editor = null
     @observable value = ""
@@ -172,6 +187,11 @@ class EditorConfig {
         localStorage.setItem('editor-options', JSON.stringify(this.options))
     }
 
+    @action
+    addText(arcType) {
+        this.editor.session.insert(this.editor.getCursorPosition(), this.getArcText(arcType))
+    }
+
     /**
      * Loads the saved value and config from localStorage.
      * As a quick hack, if there is no saved state, then load
@@ -219,7 +239,7 @@ class EditorConfig {
         // Save the blob to a local file
         const ext = mscConfig.fileType()
         const fileName = Boolean(name) ? `${name}.${ext}` : `${Math.floor(Date.now() / 1000)}.${ext}`
-        saveAs(blob, `${Math.floor(Date.now() / 1000)}.${ext}`);
+        saveAs(blob, `${fileName}.${ext}`);
       }
 
       openFile(file, onClose) {
@@ -265,7 +285,20 @@ class EditorConfig {
         console.error(pError);
       }
     }
+
+    getArcText(arcType) {
+        const inputType = mscConfig.inputType
+        const arcText = arcTypes[arcType]
+        console.log(arcType, inputType, arcText)
+        switch(inputType) {
+            case 'msgenny':
+                return `${arcText};`
+            default:
+                return `${arcText} [label=""];`
+        }
+    }
 }
+
 
 const editorConfig = new EditorConfig()
 export default editorConfig

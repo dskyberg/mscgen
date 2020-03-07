@@ -17,6 +17,9 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
 import Tooltip from '@material-ui/core/Tooltip';
+import rightMethod from '../assets/rightMethod.svg'
+import rightCallback from '../assets/rightCallback.svg'
+import rightSignal from '../assets/rightSignal.svg'
 
 export const drawerWidth = 240;
 
@@ -80,6 +83,7 @@ class AppDrawer extends React.Component {
             </Tooltip>
             <ListItemText primary="Reset Editor" />
           </ListItem>
+
         <ListItem button onClick={event => onClick(event, "save")}>
         <Tooltip title="Save editor and preview to file" aria-label="Save editor and preview to file">
             <ListItemIcon>
@@ -88,6 +92,7 @@ class AppDrawer extends React.Component {
             </Tooltip>
             <ListItemText primary="Save File" />
           </ListItem>
+
           <ListItem button onClick={event => onClick(event, "open")}>
           <Tooltip title="Open a file into the editor" aria-label="Open a file into the editor">
             <ListItemIcon>
@@ -96,6 +101,34 @@ class AppDrawer extends React.Component {
             </Tooltip>
             <ListItemText primary="Open File" />
           </ListItem>
+
+          <ListItem button onClick={event => onClick(event, "method")}>
+          <Tooltip title="Add a method arc" aria-label="Add a method arc">
+            <ListItemIcon>
+              <img src={rightMethod} width="36" alt="method"/>
+            </ListItemIcon>
+            </Tooltip>
+            <ListItemText primary="Add method" />
+          </ListItem>
+
+          <ListItem button onClick={event => onClick(event, "signal")}>
+          <Tooltip title="Add a signal arc" aria-label="Add a signal arc">
+            <ListItemIcon>
+              <img src={rightSignal} width="36" alt="signal"/>
+            </ListItemIcon>
+            </Tooltip>
+            <ListItemText primary="Add signal" />
+          </ListItem>
+
+          <ListItem button onClick={event => onClick(event, "callback")}>
+          <Tooltip title="Add a callback arc" aria-label="Add a callback arc">
+            <ListItemIcon>
+              <img src={rightCallback} width="36" alt="calback"/>
+            </ListItemIcon>
+            </Tooltip>
+            <ListItemText primary="Add callback" />
+          </ListItem>
+
          </List>
       </Drawer>
       );
