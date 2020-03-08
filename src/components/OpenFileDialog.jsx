@@ -12,16 +12,13 @@ import editorConfig from '../store/EditorConfig'
 export default function OpenFileDialog(props) {
   const {onClose, open} = props;
 
-
   const handleClose = (event) => {
     onClose(null);
   };
 
-
   const handleChange = (event) => {
     editorConfig.openFile(event.target.files[0], onClose)
   }
-
 
   return (
     <Dialog onClose={ handleClose } aria-labelledby="simple-dialog-title" open={ open }>

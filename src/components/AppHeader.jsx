@@ -3,7 +3,7 @@
 */
 import React from 'react'
 import clsx from 'clsx'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
@@ -13,7 +13,7 @@ import Tltle from './Title'
 
 import { drawerWidth } from './AppDrawer'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     toolbar: {
         paddingRight: 24, // keep right padding when drawer closed
     },
@@ -45,30 +45,26 @@ const styles = theme => ({
     title: {
         flexGrow: 1,
     },
-});
+}));
 
-class AppHeader extends React.Component {
-
-    render() {
-
-        const {onDrawerClick, title, onSettingsClick, classes, open} = this.props
-        return (
-
-            <AppBar position="fixed" className={ clsx(classes.appBar, open && classes.appBarShift) }>
-              <Toolbar className={ classes.toolbar }>
-                <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={ onDrawerClick } className={ clsx(classes.menuButton, open && classes.menuButtonHidden) }>
-                  <MenuIcon />
-                </IconButton>
-                <img src="logo.png" alt="logo" className={classes.logo} />
-                <Tltle className={ classes.title }>
-                  {title}
-                </Tltle>
-                <IconButton color="inherit" onClick={onSettingsClick}>
-                  <SettingsIcon/>
-                </IconButton>
-              </Toolbar>
-            </AppBar>
-        )
-    }
+function AppHeader(props){
+    const {onDrawerClick, title, onSettingsClick, open} = props
+    const classes = useStyles()
+    return (
+        <AppBar position="fixed" className={ clsx(classes.appBar, open && classes.appBarShift) }>
+            <Toolbar className={ classes.toolbar }>
+            <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={ onDrawerClick } className={ clsx(classes.menuButton, open && classes.menuButtonHidden) }>
+                <MenuIcon />
+            </IconButton>
+            <img src="logo.png" alt="logo" className={classes.logo} />
+            <Tltle className={ classes.title }>
+                {title}
+            </Tltle>
+            <IconButton color="inherit" onClick={onSettingsClick}>
+                <SettingsIcon/>
+            </IconButton>
+            </Toolbar>
+        </AppBar>
+    )
 }
-export default withStyles(styles)(AppHeader)
+export default AppHeader

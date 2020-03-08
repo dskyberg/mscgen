@@ -10,7 +10,7 @@ import getViewportSize from '../util/getViewportSize'
 
 
 
-const styles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
   splitPane: {
     marginLeft: drawerWidth,
     transition: theme.transitions.create('width', {
@@ -32,10 +32,9 @@ const styles = makeStyles(theme => ({
   }
 }))
 
-
-const Splitter = (props) => {
+function Splitter(props) {
     const {open} = props
-    const classes = styles()
+    const classes = useStyles()
     const savedSplitPos = localStorage.getItem('splitPos')
     let splitPos
     if( savedSplitPos === null ){

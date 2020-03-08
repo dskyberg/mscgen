@@ -51,7 +51,8 @@ function localRenderPreview(onError) {
 }
 
 /**
- * Called by App.jsx
+ * Called by App.jsx Enables toggling auto rendering
+ * based on config setting.
  * @param {function} onError Error callback
  */
 export function renderPreview(onError) {
@@ -84,10 +85,16 @@ class PreviewPane extends React.Component {
         onError: PropTypes.func.isRequired
     }
 
+    /**
+     * Render the preview, if there is a script, when the pane loads.
+     */
     componentDidMount() {
         localRenderPreview(this.props.onError)
     }
 
+    /**
+     * If a render error occurs, show the error, instead of the svg.
+     */
     displayError = (error) => {
         if (!Boolean(error)) {
             return null
@@ -110,6 +117,9 @@ class PreviewPane extends React.Component {
         )
     }
 
+    /**
+     * If auto rendering is off, render when the preview window is clicked.
+     */
     handleRenderClicked = (event) => {
         event.stopPropagation()
         if(!mscConfig.autoRender){
@@ -130,5 +140,3 @@ class PreviewPane extends React.Component {
     }
 }
 export default PreviewPane
-/*
-*/

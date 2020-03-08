@@ -56,7 +56,27 @@ const styles = theme => ({
 
 });
 
+function DrawerListItem(props) {
+  return (
+    <ListItem button onClick={event => props.onClick(event, props.value)}>
+    <Tooltip title={props.toolTip} aria-label={props.toolTip}>
+        <ListItemIcon>
+          {props.icon}
+        </ListItemIcon>
+        </Tooltip>
+        <ListItemText primary={props.text} />
+      </ListItem>
+  )
+}
+DrawerListItem.propTypes = {
+  value: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  toolTip: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  icon: PropTypes.element.isRequired,
+}
 
+@withStyles(styles)
 class AppDrawer extends React.Component {
 
   static propTypes = {
@@ -75,64 +95,52 @@ class AppDrawer extends React.Component {
         </div>
         <Divider />
         <List>
-        <ListItem button onClick={event => onClick(event, "reset")}>
-          <Tooltip title="Reset editor to default" aria-label="Reset editor to default">
-            <ListItemIcon>
-              <ClearAllIcon />
-            </ListItemIcon>
-            </Tooltip>
-            <ListItemText primary="Reset Editor" />
-          </ListItem>
-
-        <ListItem button onClick={event => onClick(event, "save")}>
-        <Tooltip title="Save editor and preview to file" aria-label="Save editor and preview to file">
-            <ListItemIcon>
-              <SaveIcon />
-            </ListItemIcon>
-            </Tooltip>
-            <ListItemText primary="Save File" />
-          </ListItem>
-
-          <ListItem button onClick={event => onClick(event, "open")}>
-          <Tooltip title="Open a file into the editor" aria-label="Open a file into the editor">
-            <ListItemIcon>
-              <OpenInBrowserIcon />
-            </ListItemIcon>
-            </Tooltip>
-            <ListItemText primary="Open File" />
-          </ListItem>
-
-          <ListItem button onClick={event => onClick(event, "method")}>
-          <Tooltip title="Add a method arc" aria-label="Add a method arc">
-            <ListItemIcon>
-              <img src={rightMethod} width="36" alt="method"/>
-            </ListItemIcon>
-            </Tooltip>
-            <ListItemText primary="Add method" />
-          </ListItem>
-
-          <ListItem button onClick={event => onClick(event, "signal")}>
-          <Tooltip title="Add a signal arc" aria-label="Add a signal arc">
-            <ListItemIcon>
-              <img src={rightSignal} width="36" alt="signal"/>
-            </ListItemIcon>
-            </Tooltip>
-            <ListItemText primary="Add signal" />
-          </ListItem>
-
-          <ListItem button onClick={event => onClick(event, "callback")}>
-          <Tooltip title="Add a callback arc" aria-label="Add a callback arc">
-            <ListItemIcon>
-              <img src={rightCallback} width="36" alt="calback"/>
-            </ListItemIcon>
-            </Tooltip>
-            <ListItemText primary="Add callback" />
-          </ListItem>
-
+          <DrawerListItem
+            value="reset"
+            onClick={onClick}
+            text="Reset Editor"
+            toolTip="Reset editor to default"
+            icon={<ClearAllIcon/>}
+          />
+          <DrawerListItem
+            value="save"
+            onClick={onClick}
+            text="Save File"
+            toolTip="Save editor and preview to file"
+            icon={<SaveIcon/>}
+          />
+          <DrawerListItem
+            value="open"
+            onClick={onClick}
+            text="Open File"
+            toolTip="Open a file into the editor"
+            icon={<OpenInBrowserIcon/>}
+          />
+          <DrawerListItem
+            value="method"
+            onClick={onClick}
+            text="Add method"
+            toolTip="Add a method arc"
+            icon={<img src={rightMethod} width="36" alt="method"/>}
+          />
+          <DrawerListItem
+            value="signal"
+            onClick={onClick}
+            text="Add signal"
+            toolTip="Add a signal arc"
+            icon={<img src={rightSignal} width="36" alt="signal"/>}
+          />
+          <DrawerListItem
+            value="callback"
+            onClick={onClick}
+            text="Add callback"
+            toolTip="Add a callback arc"
+            icon={<img src={rightCallback} width="36" alt="callback"/>}
+          />
          </List>
       </Drawer>
       );
   }
 }
-export default withStyles(styles)(AppDrawer)
+export default AppDrawer
 
