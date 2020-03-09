@@ -253,7 +253,7 @@ class EditorConfig {
         });
         // Save the blob to a local file
         const ext = mscConfig.fileType()
-        const fileName = Boolean(name) ? `${name}.${ext}` : `${Math.floor(Date.now() / 1000)}.${ext}`
+        const fileName = Boolean(name) ? `${name}` : `${Math.floor(Date.now() / 1000)}`
         saveAs(blob, `${fileName}.${ext}`);
     }
 
@@ -265,7 +265,6 @@ class EditorConfig {
      * @param {*} onClose Callback method.  Called after file ls loaded.
      */
     openFile(file, onClose) {
-        console.log('openFile:', file)
         if (!Boolean(file)) {
             if (Boolean(onClose)) {
                 onClose()
@@ -309,7 +308,6 @@ class EditorConfig {
                 mscConfig.setConfig('inputType', outputType)
             }
             this.setValue(lResult)
-            console.log(lResult);
         } catch (pError) {
             console.error(pError);
         }
@@ -318,7 +316,6 @@ class EditorConfig {
     getArcText(arcType) {
         const inputType = mscConfig.inputType
         const arcText = arcTypes[arcType]
-        console.log(arcType, inputType, arcText)
         switch (inputType) {
             case 'msgenny':
                 return `${arcText};`

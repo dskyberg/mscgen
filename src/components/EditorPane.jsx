@@ -48,7 +48,6 @@ const styles = theme => ({
 
 const spec = {
   drop(props, monitor){
-    console.log(monitor.getItem());
     editorConfig.openFile(monitor.getItem().files[0])
   }
 };
