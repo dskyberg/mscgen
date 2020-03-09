@@ -84,6 +84,12 @@ class AppDrawer extends React.Component {
     onClose: PropTypes.func
   }
 
+  /**
+   * The icons above the divider produce code snippets and add to the editor
+   * at the current cursor location.
+   *
+   * The icons below the divider are file mgt actions.
+   */
   render() {
     const {classes, open, onClose, onClick} = this.props
     return (
@@ -95,27 +101,6 @@ class AppDrawer extends React.Component {
         </div>
         <Divider />
         <List>
-          <DrawerListItem
-            value="reset"
-            onClick={onClick}
-            text="Reset Editor"
-            toolTip="Reset editor to default"
-            icon={<ClearAllIcon/>}
-          />
-          <DrawerListItem
-            value="save"
-            onClick={onClick}
-            text="Save File"
-            toolTip="Save editor and preview to file"
-            icon={<SaveIcon/>}
-          />
-          <DrawerListItem
-            value="open"
-            onClick={onClick}
-            text="Open File"
-            toolTip="Open a file into the editor"
-            icon={<OpenInBrowserIcon/>}
-          />
           <DrawerListItem
             value="method"
             onClick={onClick}
@@ -136,6 +121,30 @@ class AppDrawer extends React.Component {
             text="Add callback"
             toolTip="Add a callback arc"
             icon={<img src={rightCallback} width="36" alt="callback"/>}
+          />
+
+          <Divider/>
+
+          <DrawerListItem
+            value="reset"
+            onClick={onClick}
+            text="Reset Editor"
+            toolTip="Reset editor to default"
+            icon={<ClearAllIcon/>}
+          />
+          <DrawerListItem
+            value="save"
+            onClick={onClick}
+            text="Save File"
+            toolTip="Save editor and preview to file"
+            icon={<SaveIcon/>}
+          />
+          <DrawerListItem
+            value="open"
+            onClick={onClick}
+            text="Open File"
+            toolTip="Open a file into the editor"
+            icon={<OpenInBrowserIcon/>}
           />
          </List>
       </Drawer>
