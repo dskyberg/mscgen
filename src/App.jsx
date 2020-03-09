@@ -2,6 +2,8 @@
     Copyright (c) 2020 by David Skyberg
 */
 import React from 'react';
+import { DndProvider } from 'react-dnd'
+import Backend from 'react-dnd-html5-backend'
 import withRoot from './style/withRoot'
 import { withStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container';
@@ -200,7 +202,9 @@ class App extends React.Component {
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <Container className={ classes.container }>
           <Splitter open={ drawerOpen }>
-            <EditorPane onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
+            <DndProvider backend={Backend}>
+              <EditorPane onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
+            </DndProvider>
             <PreviewPane onError={ this.handleRenderError } />
           </Splitter>
         </Container>

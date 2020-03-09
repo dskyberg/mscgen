@@ -69,7 +69,7 @@ function DrawerListItem(props) {
   )
 }
 DrawerListItem.propTypes = {
-  value: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   toolTip: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,

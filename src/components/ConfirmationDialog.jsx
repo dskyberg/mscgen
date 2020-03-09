@@ -62,12 +62,13 @@ function ConfirmationDialog(props) {
 }
 
 ConfirmationDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
+  onClose: PropTypes.func,
+  open: PropTypes.bool,
+  title: PropTypes.string,
+  message: PropTypes.string,
 };
 ConfirmationDialog.defaultProps = {
+  open: false,
   cancelLabel: 'Cancel',
   okLabel: 'Ok',
 }

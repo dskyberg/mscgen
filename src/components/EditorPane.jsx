@@ -26,6 +26,12 @@ import "ace-builds/src-noconflict/theme-iplastic";
 import "ace-builds/src-noconflict/theme-katzenmilch";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-xcode";
+import {
+  DropTarget,
+} from 'react-dnd';
+
+import { NativeTypes } from 'react-dnd-html5-backend';
+
 import editorConfig from '../store/EditorConfig'
 
 const styles = theme => ({
@@ -38,6 +44,17 @@ const styles = theme => ({
     background: 'rgba(100,200,100,0.5)',
     zIndex: 20
   }
+});
+
+const spec = {
+  drop(props, monitor){
+    console.log(monitor.getItem());
+    editorConfig.openFile(monitor.getItem().files[0])
+  }
+};
+
+const collect = (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
 });
 
 @withStyles(styles)
@@ -72,16 +89,20 @@ class EditorPane extends React.Component {
     }
 
     render() {
-    const {onChange, onLoad, classes, error} = this.props
+    const {onChange, onLoad, classes, error, connectDropTarget} = this.props
     const content = editorConfig.value
     const options = editorConfig.options
     const config = editorConfig.config
     const markers = this.makeMarkers(classes, error)
-    return (
+    return connectDropTarget(
         <div  className={classes.wrapper}>
           <AceEditor width="1200" height="100%" maxLines={Infinity} onChange={ onChange } onLoad={onLoad} value={ content } markers={ markers } setOptions={ options } {...config}/>
         </div>
     )
   }
 }
-export default EditorPane
+export default DropTarget(
+  NativeTypes.FILE,
+  spec,
+  collect
+)(EditorPane)

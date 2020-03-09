@@ -79,7 +79,7 @@ const msgennyDefault = `a -> b : ab();
   ...;
   `
 
-  const arcTypes = {
+const arcTypes = {
     solid: 'a -- b',
     dotted: 'a .. b',
     signal: 'a -> b',
@@ -94,6 +94,23 @@ const msgennyDefault = `a -> b : ab();
     biemphasis: 'a <:> b',
     lost: 'a -x b'
 }
+const configAttrs = [
+    'editor',
+    'value',
+    'mode',
+    'theme',
+    'fontSize',
+    'showPrintMargin',
+    'showGutter',
+    'highlightActiveLine',
+    'enableBasicAutocompletion',
+    'enableBasicAutocompletion',
+    'enableLiveAutocompletion',
+    'enableSnippets',
+    'tabSize',
+    'showLineNumbers',
+]
+
 class EditorConfig {
     @observable editor = null
     @observable value = ""
@@ -110,7 +127,7 @@ class EditorConfig {
     @observable tabSize = 2
 
     // Options
-   @observable showLineNumbers = true
+    @observable showLineNumbers = true
 
     constructor() {
         this.getStoredState()
@@ -130,13 +147,18 @@ class EditorConfig {
     @action
     resetEditor() {
         const inputType = mscConfig.inputType
-        switch(inputType) {
-            case 'msgenny': this.setValue(msgennyDefault); break;
-            default: this.setValue(mscDefault); break;
+        switch (inputType) {
+            case 'msgenny':
+                this.setValue(msgennyDefault);
+                break;
+            default:
+                this.setValue(mscDefault);
+                break;
         }
     }
 
-    @computed get config() {
+    @computed
+    get config() {
         return {
             mode: toJS(this.mode),
             theme: toJS(this.theme),
@@ -150,7 +172,8 @@ class EditorConfig {
             tabSize: toJS(this.tabSize),
         }
     }
-    @computed get options() {
+    @computed
+    get options() {
         const options = {
             showLineNumbers: toJS(this.showLineNumbers),
         }
@@ -159,27 +182,19 @@ class EditorConfig {
 
     @action
     setConfigValue(name, value) {
-        switch(name) {
-            case 'mode': this.mode = value; break;
-            case 'theme': this.theme = value; break;
-            case 'fontSize': this.fontSize = value; break;
-            case 'showPrintMargin': this.showPrintMargin = value; break;
-            case 'showGutter': this.showGutter = value; break;
-            case 'highlightActiveLine': this.highlightActiveLine = value; break;
-            case 'enableBasicAutocompletion': this.enableBasicAutocompletion = value; break;
-            case 'enableLiveAutocompletion': this.enableLiveAutocompletion = value; break;
-            case 'enableSnippets': this.enableSnippets = value; break;
-            case 'showLineNumbers': this.showLineNumbers = value; break;
-            case 'tabSize': this.tabSize = value; break;
-            default: console.log('Unknown value', value); throw new Error('Unknown value');
+        if(configAttrs.includes(name)) {
+            this[name] = value
+            return
         }
+        console.log('Unknown value', value);
+        throw new Error('Unknown value');
     }
 
     @action
     setConfig(name, value) {
         try {
-            this.setConfigValue(name,value)
-        } catch(err) {
+            this.setConfigValue(name, value)
+        } catch (err) {
             return
         }
 
@@ -199,14 +214,14 @@ class EditorConfig {
      */
     getStoredState() {
         const savedValue = localStorage.getItem('value')
-        if(Boolean(savedValue)) {
+        if (Boolean(savedValue)) {
             this.value = savedValue
         } else {
             this.setValue(mscDefault)
         }
 
         const configStr = localStorage.getItem('editor-config')
-        if(Boolean(configStr)) {
+        if (Boolean(configStr)) {
             const config = JSON.parse(configStr)
             Object.keys(config).forEach(key => {
                 this.setConfigValue(key, config[key])
@@ -215,7 +230,7 @@ class EditorConfig {
             localStorage.setItem('editor-config', JSON.stringify(this.config))
         }
         const optionsStr = localStorage.getItem('editor-options')
-        if(Boolean(optionsStr)) {
+        if (Boolean(optionsStr)) {
             const options = JSON.parse(optionsStr)
             Object.keys(options).forEach(key => {
                 this.setConfigValue(key, options[key])
@@ -234,63 +249,77 @@ class EditorConfig {
     saveToFile(name) {
 
         const blob = new Blob([this.value], {
-          type: "text/plain;charset=utf-8"
+            type: "text/plain;charset=utf-8"
         });
         // Save the blob to a local file
         const ext = mscConfig.fileType()
         const fileName = Boolean(name) ? `${name}.${ext}` : `${Math.floor(Date.now() / 1000)}.${ext}`
         saveAs(blob, `${fileName}.${ext}`);
-      }
+    }
 
-      openFile(file, onClose) {
-          if(!Boolean(file)){
-              if(Boolean(onClose)){
-                  onClose()
-              }
-              console.log('Error: No filename to open')
-              return
-          }
+    /**
+     * Load a file from local drive to the editor.  This also does some work to
+     * set the inputType based on the file extension.
+     *
+     * @param {*} file HTML5 javascript File object
+     * @param {*} onClose Callback method.  Called after file ls loaded.
+     */
+    openFile(file, onClose) {
+        console.log('openFile:', file)
+        if (!Boolean(file)) {
+            if (Boolean(onClose)) {
+                onClose()
+            }
+            console.log('Error: No filename to open')
+            return
+        }
 
         const fileReader = new FileReader()
         fileReader.onloadend = (e) => {
             const content = fileReader.result
-            const ext =  parsePath(file.name).ext.slice(1)
+            const ext = parsePath(file.name).ext.slice(1)
             mscConfig.setError(null)
             mscConfig.setSvg(null)
             mscConfig.setConfig('inputType', ext)
             this.setValue(content)
-            onClose(file);
-          }
+            if (Boolean(onClose)) {
+                onClose()
+            }
+        }
 
         try {
-          fileReader.readAsText(file)
+            fileReader.readAsText(file)
         } catch (error) {
-          console.log(error)
+            console.log(error)
         }
-      }
+    }
 
-     transpile(outputType, setPreviewInputType) {
-      try {
 
-        let lResult = require('mscgenjs').translateMsc(
-            this.value,{inputType: mscConfig.inputType, outputType: outputType })
-        mscConfig.setError(null)
-        mscConfig.setSvg(null)
-        if(Boolean(setPreviewInputType)) {
-            mscConfig.setConfig('inputType', outputType)
+    transpile(outputType, setPreviewInputType) {
+        try {
+
+            let lResult = require('mscgenjs').translateMsc(
+                this.value, {
+                    inputType: mscConfig.inputType,
+                    outputType: outputType
+                })
+            mscConfig.setError(null)
+            mscConfig.setSvg(null)
+            if (Boolean(setPreviewInputType)) {
+                mscConfig.setConfig('inputType', outputType)
+            }
+            this.setValue(lResult)
+            console.log(lResult);
+        } catch (pError) {
+            console.error(pError);
         }
-        this.setValue(lResult)
-        console.log(lResult);
-      } catch (pError) {
-        console.error(pError);
-      }
     }
 
     getArcText(arcType) {
         const inputType = mscConfig.inputType
         const arcText = arcTypes[arcType]
         console.log(arcType, inputType, arcText)
-        switch(inputType) {
+        switch (inputType) {
             case 'msgenny':
                 return `${arcText};`
             default:
