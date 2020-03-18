@@ -12,6 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import SettingsIcon from '@material-ui/icons/Settings'
 import TabIcon from '@material-ui/icons/Tab'
 import VerticalSplitIcon from '@material-ui/icons/VerticalSplit'
+import GitHubIcon from '@material-ui/icons/GitHub'
 import Tltle from './Title'
 
 import { drawerWidth } from './AppDrawer'
@@ -50,10 +51,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+function doGitHub() {
+    window.open('https://github.com/dskyberg/mscgen', '_blank')
+}
+
 function AppHeader(props){
     const {onDrawerClick, title, onSettingsClick, onModeClick, mode, open} = props
     const classes = useStyles()
-    const modeIcon =  mode === 'tabs' ? <VerticalSplitIcon/> : <TabIcon/> 
+    const modeIcon =  mode === 'tabs' ? <VerticalSplitIcon/> : <TabIcon/>
     const modeTitle = mode === 'tabs' ? 'Use split view' : 'Use tabbed view'
     return (
         <AppBar position="fixed" className={ clsx(classes.appBar, open && classes.appBarShift) }>
@@ -70,6 +75,9 @@ function AppHeader(props){
                     { modeIcon }
                 </IconButton>
             </Tooltip>
+            <IconButton color="inherit" onClick={doGitHub}>
+                <GitHubIcon/>
+            </IconButton>
             <IconButton color="inherit" onClick={onSettingsClick}>
                 <SettingsIcon/>
             </IconButton>

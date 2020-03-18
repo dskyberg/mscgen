@@ -16,6 +16,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Typography from '@material-ui/core/Typography'
 
 import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -81,6 +82,10 @@ class SettingsDialog extends React.Component {
         return (
             <Dialog open={ open } onClose={ onClose } scroll="paper">
               <DialogTitle id="settings-dialog-title">Settings</DialogTitle>
+              <DialogContent dividers={ true } id="settings-dialog-recognition">
+                <Typography variant="body1">This app was assembled by David Skyberg</Typography>
+                <Typography variant="body1">It leverage the great work done on Ace Editor and mscgenjs</Typography>
+              </DialogContent>
               <DialogContent dividers={ true }>
                 <div className={ classes.dialogContent }>
                   <FormControl component="fieldset" className={ classes.formControl }>
