@@ -6,9 +6,12 @@ import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import SettingsIcon from '@material-ui/icons/Settings'
+import TabIcon from '@material-ui/icons/Tab'
+import VerticalSplitIcon from '@material-ui/icons/VerticalSplit'
 import Tltle from './Title'
 
 import { drawerWidth } from './AppDrawer'
@@ -48,8 +51,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function AppHeader(props){
-    const {onDrawerClick, title, onSettingsClick, open} = props
+    const {onDrawerClick, title, onSettingsClick, onModeClick, mode, open} = props
     const classes = useStyles()
+    const modeIcon =  mode === 'tabs' ? <VerticalSplitIcon/> : <TabIcon/> 
+    const modeTitle = mode === 'tabs' ? 'Use split view' : 'Use tabbed view'
     return (
         <AppBar position="fixed" className={ clsx(classes.appBar, open && classes.appBarShift) }>
             <Toolbar className={ classes.toolbar }>
@@ -60,6 +65,11 @@ function AppHeader(props){
             <Tltle className={ classes.title }>
                 {title}
             </Tltle>
+            <Tooltip title={modeTitle} aria-label={modeTitle}>
+                <IconButton color="inherit" onClick={onModeClick}>
+                    { modeIcon }
+                </IconButton>
+            </Tooltip>
             <IconButton color="inherit" onClick={onSettingsClick}>
                 <SettingsIcon/>
             </IconButton>

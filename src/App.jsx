@@ -4,9 +4,13 @@
 import React from 'react';
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
+import clsx from 'clsx';
 import withRoot from './style/withRoot'
 import { withStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import TabPanel from './components/TabPanel'
 import AppHeader from './components/AppHeader'
 import AppDrawer from './components/AppDrawer';
 import EditorPane from './components/EditorPane'
@@ -21,6 +25,8 @@ import SaveFileDialog from './components/SaveFileDialog'
 import mscConfig from './store/MSC_Config'
 import editorConfig from './store/EditorConfig'
 import getViewportSize from './util/getViewportSize'
+import {drawerWidth} from './components/AppDrawer'
+
 
 const styles = theme => ({
   app_root: {
@@ -39,9 +45,24 @@ const styles = theme => ({
     padding: 0,
   },
   splitPane: {
-    marginLeft: 64,
-    height: '100%',
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    overflow: 'hidden',
   },
+  splitPaneClose: {
+    overflow: 'hidden',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: theme.spacing(7),
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(9),
+    },
+  }
 });
 
 class App extends React.Component {
@@ -59,6 +80,8 @@ class App extends React.Component {
       cdOpen: false,
       cdOnClose: null,
       sfdOpen:false,
+      tab:0,
+      mode: 'split',
     }
   }
 
@@ -190,23 +213,69 @@ class App extends React.Component {
     editorConfig.setEditor(editor)
   }
 
+  handleModeChanged = () => {
+    const mode = this.state.mode
+    this.setState({mode: mode === 'tabs' ? 'split' : 'tabs'})
+  }
+  /**
+   * If using tabs, track when the tab changes
+   */
+  handleTabChange = (event, newValue) => {
+    this.setState({tab: newValue});
+  }
+
   render() {
     const {classes} = this.props
     const {drawerOpen, snackbarOpen, snackbarMsg, openFileDialogOpen, settingsDialogOpen} = this.state
     const content = editorConfig.value
     const error = mscConfig.error
 
+    const doSplitWindow = () => {
+      return (
+        <Splitter open={ drawerOpen }>
+          <DndProvider backend={Backend}>
+            <EditorPane inSplitter={true} onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
+          </DndProvider>
+          <PreviewPane onError={ this.handleRenderError } />
+        </Splitter>
+      )
+    }
+    const doMultiWindow = () => {
+      return (
+        <React.Fragment>
+          <DndProvider backend={Backend}>
+            <EditorPane inSplitter={false} open={ drawerOpen } onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
+          </DndProvider>
+          <PreviewPane inPortal={true} onError={ this.handleRenderError } />
+        </React.Fragment>
+      )
+    }
+
+    const doTabs = () => {
+      return (
+        <div className={clsx(classes.splitPane, !drawerOpen && classes.splitPaneClose)}>
+          <Tabs value={this.state.tab}onChange={this.handleTabChange} aria-label="mscgen tabbed view">
+            <Tab label="Editor" />
+            <Tab label="Preview"/>
+          </Tabs>
+          <TabPanel value={this.state.tab} index={0}>
+            <DndProvider backend={Backend}>
+              <EditorPane inSplitter={true} onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
+            </DndProvider>
+          </TabPanel>
+          <TabPanel value={this.state.tab} index={1}>
+            <PreviewPane onError={ this.handleRenderError } />
+          </TabPanel>
+        </div>
+      )
+    }
+
     return (
       <div className={ classes.app_root }>
-        <AppHeader title="MSC Generator" onDrawerClick={ this.handleDrawerOpen } open={ drawerOpen } onSettingsClick={ this.handleSettingsClick } />
+        <AppHeader title="MSC Generator" onDrawerClick={ this.handleDrawerOpen } open={ drawerOpen } onSettingsClick={ this.handleSettingsClick } mode={this.state.mode} onModeClick={this.handleModeChanged}/>
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <Container className={ classes.container }>
-          <Splitter open={ drawerOpen }>
-            <DndProvider backend={Backend}>
-              <EditorPane onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
-            </DndProvider>
-            <PreviewPane onError={ this.handleRenderError } />
-          </Splitter>
+          {this.state.mode === 'tabs' ? doTabs() : doSplitWindow()}
         </Container>
         <OpenFileDialog open={ openFileDialogOpen } onClose={ this.handleOpenFile } />
         <SettingsDialog open={ settingsDialogOpen } onClose={ this.handleSettingsClosed } />

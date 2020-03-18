@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles'
 import {observer} from 'mobx-react'
 import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-ambiance";
 import "ace-builds/src-noconflict/theme-chaos";
@@ -35,7 +36,7 @@ import { NativeTypes } from 'react-dnd-html5-backend';
 import editorConfig from '../store/EditorConfig'
 
 const styles = theme => ({
-  wrapper: {
+  editor_pane: {
     height: '100%',
     overflow: 'auto',
   },
@@ -93,8 +94,9 @@ class EditorPane extends React.Component {
     const options = editorConfig.options
     const config = editorConfig.config
     const markers = this.makeMarkers(classes, error)
+
     return connectDropTarget(
-        <div  className={classes.wrapper}>
+        <div  className={classes.editor_pane}>
           <AceEditor width="1200" height="100%" maxLines={Infinity} onChange={ onChange } onLoad={onLoad} value={ content } markers={ markers } setOptions={ options } {...config}/>
         </div>
     )
