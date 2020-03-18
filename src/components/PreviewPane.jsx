@@ -21,6 +21,7 @@ import getViewportSize from '../util/getViewportSize'
  * @param {function} onError Error callback
  */
 export function renderPreview(onError) {
+    console.log('renderPreview')
     if (mscConfig.autoRender) {
         //localRenderPreview(onError)
     }
@@ -166,10 +167,23 @@ class PreviewPane extends React.Component {
         this.localRenderPreview(this.props.onError)
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // Only update if bricks change
+        console.log('shouldComponentUpdate called')
+
+        if(nextProps.content !== this.props.content) {
+            console.log('shouldComponentUpdate: new value')
+            if(mscConfig.autoRender) {
+                console.log('shouldComponentUpdate: autoRender')
+                this.localRenderPreview(this.props.onError)
+            }
+        }
+        return true
+    }
+
     render() {
-        const {classes, inPortal, height, width} = this.props
+        const {classes, inPortal, height, width, content} = this.props
         const error = mscConfig.error
-        const value = mscConfig.value // Trigger re-rendering
         const errorState = Boolean(error)
         const features = {
 //            width: Boolean(height) ? height : getViewportSize(window).height,

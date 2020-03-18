@@ -4,6 +4,7 @@
 import React from 'react';
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
+import {observer} from 'mobx-react'
 import clsx from 'clsx';
 import withRoot from './style/withRoot'
 import { withStyles } from '@material-ui/core/styles'
@@ -65,6 +66,7 @@ const styles = theme => ({
   }
 });
 
+@observer
 class App extends React.Component {
 
   constructor(props) {
@@ -236,7 +238,7 @@ class App extends React.Component {
           <DndProvider backend={Backend}>
             <EditorPane inSplitter={true} onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
           </DndProvider>
-          <PreviewPane onError={ this.handleRenderError } />
+          <PreviewPane onError={ this.handleRenderError } content={content}/>
         </Splitter>
       )
     }
@@ -246,7 +248,7 @@ class App extends React.Component {
           <DndProvider backend={Backend}>
             <EditorPane inSplitter={false} open={ drawerOpen } onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
           </DndProvider>
-          <PreviewPane inPortal={true} onError={ this.handleRenderError } />
+          <PreviewPane inPortal={true} onError={ this.handleRenderError } content={content}/>
         </React.Fragment>
       )
     }
@@ -264,7 +266,7 @@ class App extends React.Component {
             </DndProvider>
           </TabPanel>
           <TabPanel value={this.state.tab} index={1}>
-            <PreviewPane onError={ this.handleRenderError } />
+            <PreviewPane onError={ this.handleRenderError } content={content}/>
           </TabPanel>
         </div>
       )
