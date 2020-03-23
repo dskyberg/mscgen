@@ -5,7 +5,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Portal from './Portal'
 import { observer } from 'mobx-react'
-import { reaction } from 'mobx'
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
@@ -21,7 +20,6 @@ import getViewportSize from '../util/getViewportSize'
  * @param {function} onError Error callback
  */
 export function renderPreview(onError) {
-    console.log('renderPreview')
     if (mscConfig.autoRender) {
         //localRenderPreview(onError)
     }
@@ -68,7 +66,6 @@ class PreviewPane extends React.Component {
     }
 
     setSvgElem = elem => {
-        console.log('Setting svgElem:', elem)
         this.svgElem = elem
         this.localRenderPreview(this.props.onError)
     }
@@ -83,14 +80,12 @@ class PreviewPane extends React.Component {
         if (!Boolean(this.svgElem)) {
             // The __svg div doesn't appear to exist.  Bale out
             // throw new Error("Can't find id of target element to render to")
-            console.log('localRenderPreview: element not found:', this.svgElem)
             return
         }
         //    const elem = document.getElementById('__svg')
         const elem = this.svgElem
         const win = elem.ownerDocument.defaultView || elem.ownerDocument.parentWindow
         config['window'] = win
-        console.log('localRenderPreview: element found')
         // Always clear the existing svg, or we get some strange overlay conditions
         elem.innerHTML = ''
 
@@ -121,7 +116,6 @@ class PreviewPane extends React.Component {
      * Render the preview, if there is a script, when the pane loads.
      */
     componentDidMount() {
-        console.log('PreviewPane.componentDidMount')
         this.localRenderPreview(this.props.onError)
     }
 
@@ -155,7 +149,6 @@ class PreviewPane extends React.Component {
      * If auto rendering is off, render when the preview window is clicked.
      */
     handleRenderClicked = (event) => {
-        console.log('handleRenderClicked')
         event.stopPropagation()
         if(!mscConfig.autoRender){
             this.localRenderPreview(this.props.onError)
@@ -163,31 +156,31 @@ class PreviewPane extends React.Component {
     }
 
     handlePortalOpen = () => {
-        console.log('PreviewPane.handlePortalOpen: setting targetDoc')
         this.localRenderPreview(this.props.onError)
     }
 
+    /**
+     * Look to see if the editor content has changed.  If so and of autoRender is
+     * on, then re-render the SVG
+     * Note, always return true for this, since returing false, disables rendering
+     * altogether.
+     *
+     * @param {object} nextProps
+     * @param {object} nextState
+     */
     shouldComponentUpdate(nextProps, nextState) {
-        // Only update if bricks change
-        console.log('shouldComponentUpdate called')
-
-        if(nextProps.content !== this.props.content) {
-            console.log('shouldComponentUpdate: new value')
-            if(mscConfig.autoRender) {
-                console.log('shouldComponentUpdate: autoRender')
-                this.localRenderPreview(this.props.onError)
-            }
+        if(nextProps.content !== this.props.content && mscConfig.autoRender === true) {
+            this.localRenderPreview(this.props.onError)
         }
+        // Always return true, or other changes won't cause a render
         return true
     }
 
     render() {
-        const {classes, inPortal, height, width, content} = this.props
+        const {classes, inPortal} = this.props
         const error = mscConfig.error
         const errorState = Boolean(error)
         const features = {
-//            width: Boolean(height) ? height : getViewportSize(window).height,
-//            height: Boolean(width) ? height : getViewportSize(window).width,
             left: 0,
             top: 0
         }

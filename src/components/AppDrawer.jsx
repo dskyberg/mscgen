@@ -16,6 +16,7 @@ import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser'
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
+import HelpIcon from '@material-ui/icons/Help'
 import Tooltip from '@material-ui/core/Tooltip';
 import rightMethod from '../assets/rightMethod.svg'
 import rightCallback from '../assets/rightCallback.svg'
@@ -84,6 +85,10 @@ class AppDrawer extends React.Component {
     onClose: PropTypes.func
   }
 
+  handleHelpClick = (event) => {
+    window.open('https://mscgen.js.org/tutorial.html#mscgen', '_blank')
+  }
+
   /**
    * The icons above the divider produce code snippets and add to the editor
    * at the current cursor location.
@@ -101,6 +106,13 @@ class AppDrawer extends React.Component {
         </div>
         <Divider />
         <List>
+          <DrawerListItem
+            value="help"
+            onClick={this.handleHelpClick}
+            text="Help"
+            toolTip="MSCGen syntax help"
+            icon={<HelpIcon/>}
+          />
           <DrawerListItem
             value="method"
             onClick={onClick}

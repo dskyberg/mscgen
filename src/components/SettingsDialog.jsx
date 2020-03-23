@@ -79,7 +79,7 @@ class SettingsDialog extends React.Component {
 
   render() {
     const {open, onClose, classes} = this.props
-    console.log('Version:', VERSION)
+
     return (
       <Dialog open={ open } onClose={ onClose } scroll="paper">
         <DialogTitle id="settings-dialog-title">Settings</DialogTitle>

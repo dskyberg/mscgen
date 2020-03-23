@@ -43,11 +43,9 @@ class MSC_Config {
             return
         }
         if(inputType === this.inputType) {
-            console.log('mscConfig.setInputType: no change')
             return
         }
         if(InputTypes.includes(inputType)) {
-            console.log('mscConfig.setInputType: changing to', inputType)
             if(Boolean(editorConfig) && Boolean(editorConfig.value)){
                 editorConfig.transpile(inputType, false)
             }

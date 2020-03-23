@@ -271,13 +271,20 @@ class App extends React.Component {
         </div>
       )
     }
+    const doView = () => {
+     switch(this.state.mode) {
+       case 'multi': return doMultiWindow();
+       case 'tabs': return doTabs();
+       default: doSplitWindow()
+     }
+    }
 
     return (
       <div className={ classes.app_root }>
         <AppHeader title="MSC Generator" onDrawerClick={ this.handleDrawerOpen } open={ drawerOpen } onSettingsClick={ this.handleSettingsClick } mode={this.state.mode} onModeClick={this.handleModeChanged}/>
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <Container className={ classes.container }>
-          {this.state.mode === 'tabs' ? doTabs() : doSplitWindow()}
+          {doView()}
         </Container>
         <OpenFileDialog open={ openFileDialogOpen } onClose={ this.handleOpenFile } />
         <SettingsDialog open={ settingsDialogOpen } onClose={ this.handleSettingsClosed } />
