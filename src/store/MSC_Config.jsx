@@ -80,11 +80,12 @@ class MSC_Config {
             case 'elementId': this.elementId = value; break;
             case 'inputType': this.setInputType(value); break;
             case 'mirrorEntitiesOnBottom': this.mirrorEntitiesOnBottom = value; break;
+            case 'fixedNamedStyle':
             case 'additionalTemplate': this.additionalTemplate = value; break;
             case 'includeSource': this.includeSource = value; break;
             case 'regularArcTextVerticalAlignment': this.regularArcTextVerticalAlignment = value; break;
             case 'autoRender': this.autoRender = value; break;
-            default: console.log('Unknown value', value); throw new Error('Unknown value');
+            default: console.log('Unknown name+value', name, value); throw new Error('Unknown value');
         }
     }
 
