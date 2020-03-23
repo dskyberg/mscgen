@@ -1,6 +1,6 @@
 {
     "name": "mscgen",
-    "version": "0.1.0",
+    "version": "0.1.61",
     "private": true,
     "author": {
         "name": "David Skyberg",
@@ -35,7 +35,7 @@
         "@babel/core": "7.8.4",
         "@babel/plugin-proposal-class-properties": "^7.8.3",
         "@babel/plugin-proposal-decorators": "^7.8.3",
-        "@svgr/webpack": "4.3.3",
+        "@svgr/webpack": "^4.3.3",
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.3.2",
         "@testing-library/user-event": "^7.1.2",
@@ -95,7 +95,7 @@
         "build": "node scripts/build.js",
         "test": "node scripts/test.js",
         "serve": "node node_modules/.bin/serve -s build",
-        "mscgenjs": "mscgenjs"
+        "build_number": "git log master --pretty=oneline | wc -l"
     },
     "eslintConfig": {
         "extends": "react-app"
