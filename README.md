@@ -1,16 +1,21 @@
+# MSCGen
+Because the world needs another sequence diagram generator!
+This app draws heavily from websequencediagram to provide a simple Single Page App (SPA) that
+allows you to define sequence diagrams using the [MSC](https://mscgen.js.org/tutorial.html)
+script language.
+
+## Run from Netlify
+This app is hosted at [https://mscgen.netlify.com](https://mscgen.netlify.com)
+It is a Single Page App (SPA) that, once loaded, makes absolutely no calls to any
+services. It is perfectly safe to run in your browser.
+
 ![Main Screen](/doc/images/screen1.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and uses:
-React
-* [MobX](https://mobx.js.org/README.html)
-* [Material-ui](https://material-ui.com/)
-* [Ace Editor](https://ace.c9.io/)
-* [MSCGen JS](https://mscgen.js.org/tutorial.html)
+## [Syntax Guide](https://mscgen.js.org/tutorial.html)
 
 
-## Getting Started
+# Building
 
-Whether you want to play with the source, or just use the editor, you will need Node installed.  The code has been tested on v11.10.1.
 
 To get started, clone this repo with `git clone https://github.com/dskyberg/mscgen.git`.
 
@@ -69,4 +74,10 @@ By default, the editor is in autoReset mode.  So that every change in the editor
 results in the preview rendering.  You can turn this off in the Settings dialog.
 When autoRender is off, clicking the preview pane will cause a refresh.
 
-## [Syntax Guide](https://mscgen.js.org/tutorial.html)
+
+This app was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and uses:
+React
+* [MobX](https://mobx.js.org/README.html)
+* [Material-ui](https://material-ui.com/)
+* [Ace Editor](https://ace.c9.io/)
+* [MSCGen JS](https://mscgen.js.org/tutorial.html)
