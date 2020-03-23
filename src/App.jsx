@@ -275,7 +275,7 @@ class App extends React.Component {
      switch(this.state.mode) {
        case 'multi': return doMultiWindow();
        case 'tabs': return doTabs();
-       default: doSplitWindow()
+       default: return doSplitWindow()
      }
     }
 
