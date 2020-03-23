@@ -1,7 +1,7 @@
 # MSCGen
 Because the world needs another sequence diagram generator!
 This app draws heavily from websequencediagram to provide a simple Single Page App (SPA) that
-allows you to define sequence diagrams using the [MSC](https://mscgen.js.org/tutorial.html)
+allows you to define sequence diagrams using the [MSC](https://mscgen.js.org/tutorial.html#mscgen)
 script language.
 
 ## Run from Netlify
@@ -11,7 +11,7 @@ services. It is perfectly safe to run in your browser.
 
 ![Main Screen](/doc/images/screen1.png)
 
-## [Syntax Guide](https://mscgen.js.org/tutorial.html)
+## [Syntax Guide](https://mscgen.js.org/tutorial.html#mscgen)
 
 
 # Building
