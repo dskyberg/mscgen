@@ -11,7 +11,7 @@ services. It is perfectly safe to run in your browser.
 
 ![Main Screen](/doc/images/screen1.png)
 
-## [Syntax Guide](https://mscgen.js.org/tutorial.html)
+## [Syntax Guide](https://mscgen.js.org/tutorial.html#mscgen)
 
 
 # Building
