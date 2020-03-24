@@ -16,7 +16,7 @@ class MSC_Config {
     @observable elementId = "__svg"
     @observable inputType = "xu" // mscgen, msgenny, xu, json
     @observable mirrorEntitiesOnBottom = true
-    @observable additionalTemplate = 'lazy' // lazy, classic, empty
+    @observable additionalTemplate = 'lazy' // lazy, classic, cygne, pegasse, fountainpen
     @observable includeSource = false
     @observable regularArcTextVerticalAlignment = 'middle' // above, middle, below
     @observable styleAdditions = null
@@ -38,11 +38,7 @@ class MSC_Config {
 
     @action
     setInputType(inputType) {
-        if(!Boolean(inputType)){
-            console.log('MSCConfig.setInputType: No value')
-            return
-        }
-        if(inputType === this.inputType) {
+        if(!Boolean(inputType) || inputType === this.inputType){
             return
         }
         if(InputTypes.includes(inputType)) {
@@ -56,21 +52,6 @@ class MSC_Config {
     }
 
 
-    @computed get config() {
-        const config = {
-            elementId: this.elementId,
-            inputType: this.inputType,
-            mirrorEntitiesOnBottom: this.mirrorEntitiesOnBottom,
-            additionalTemplate: this.additionalTemplate,
-            includeSource: this.includeSource,
-            regularArcTextVerticalAlignment: this.regularArcTextVerticalAlignment,
-            autoRender: this.autoRender,
-        }
-        if (this.styleAdditions !== null) {
-            config.styleAdditions = this.styleAdditions
-        }
-        return toJS(config)
-    }
 
     @action
     setConfigValue(name, value) {
@@ -79,7 +60,7 @@ class MSC_Config {
             case 'inputType': this.setInputType(value); break;
             case 'mirrorEntitiesOnBottom': this.mirrorEntitiesOnBottom = value; break;
             case 'fixedNamedStyle':
-            case 'additionalTemplate': this.additionalTemplate = value; break;
+            case 'additionalTemplate': this.additionalTemplate = value.toLowerCase(); break;
             case 'includeSource': this.includeSource = value; break;
             case 'regularArcTextVerticalAlignment': this.regularArcTextVerticalAlignment = value; break;
             case 'autoRender': this.autoRender = value; break;
@@ -96,6 +77,22 @@ class MSC_Config {
         }
 
         localStorage.setItem('msc-config', JSON.stringify(this.config))
+    }
+
+    @computed get config() {
+        const config = {
+            elementId: this.elementId,
+            inputType: this.inputType,
+            mirrorEntitiesOnBottom: this.mirrorEntitiesOnBottom,
+            additionalTemplate: this.additionalTemplate,
+            includeSource: this.includeSource,
+            regularArcTextVerticalAlignment: this.regularArcTextVerticalAlignment,
+            autoRender: this.autoRender,
+        }
+        if (this.styleAdditions !== null) {
+            config.styleAdditions = this.styleAdditions
+        }
+        return toJS(config)
     }
 
     getStoredState() {
