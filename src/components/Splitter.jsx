@@ -6,8 +6,6 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles'
 import SplitPane from 'react-split-pane'
 import {drawerWidth} from './AppDrawer'
-import getViewportSize from '../util/getViewportSize'
-
 
 
 const useStyles = makeStyles(theme => ({
