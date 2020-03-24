@@ -1,6 +1,6 @@
 {
     "name": "mscgen",
-    "version": "0.1.66",
+    "version": "0.1.70",
     "private": true,
     "author": {
         "name": "David Skyberg",
@@ -16,7 +16,7 @@
         "ace-builds": "^1.4.8",
         "file-saver": "^2.0.2",
         "mobx": "^5.15.4",
-        "mobx-react": "^5.4.4",
+        "mobx-react": "^6.1.8",
         "mscgenjs": "^4.0.5",
         "parse-filepath": "^1.0.2",
         "prop-types": "^15.7.2",
