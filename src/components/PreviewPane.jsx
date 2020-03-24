@@ -50,7 +50,6 @@ const styles = theme => ({
 });
 
 @withStyles(styles)
-@observer
 class PreviewPane extends React.Component {
     static propTypes = {
         onError: PropTypes.func.isRequired,
@@ -67,7 +66,7 @@ class PreviewPane extends React.Component {
 
     setSvgElem = elem => {
         this.svgElem = elem
-        this.localRenderPreview(this.props.onError)
+        //this.localRenderPreview(this.props.onError)
     }
 
     /**
@@ -123,7 +122,6 @@ class PreviewPane extends React.Component {
      * If a render error occurs, show the error, instead of the svg.
      */
     displayError = (error) => {
-        console.log('displayError:', error)
         if (!Boolean(error)) {
             return null
         }
@@ -169,22 +167,28 @@ class PreviewPane extends React.Component {
      * @param {object} nextState
      */
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextProps.content !== this.props.content && mscConfig.autoRender === true) {
+        // Don't do anything if autoRender is off
+        if(mscConfig.autoRender === false){
+            return true
+        }
+
+        if(nextProps.content !== this.props.content || nextProps.config !== this.props.config) {
             this.localRenderPreview(this.props.onError)
         }
         // Always return true, or other changes won't cause a render
         return true
     }
 
+
     render() {
-        const {classes, inPortal} = this.props
+        const {classes, inPortal, onError} = this.props
         const error = mscConfig.error
         const errorState = Boolean(error)
         const features = {
             left: 0,
             top: 0
         }
-
+        // Experimental support for createPortal.
         if (inPortal) {
             return (
                 <Portal url="" name="MSCGenPreview" title="MSCGen Preview" copyStyles={ true } onOpen={ this.handlePortalOpen } features={ features } onClick={this.handleRenderClicked}>

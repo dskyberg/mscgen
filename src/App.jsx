@@ -238,7 +238,7 @@ class App extends React.Component {
           <DndProvider backend={Backend}>
             <EditorPane inSplitter={true} onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
           </DndProvider>
-          <PreviewPane onError={ this.handleRenderError } content={content}/>
+          <PreviewPane onError={ this.handleRenderError } content={content} config={mscConfig.config}/>
         </Splitter>
       )
     }
@@ -248,7 +248,7 @@ class App extends React.Component {
           <DndProvider backend={Backend}>
             <EditorPane inSplitter={false} open={ drawerOpen } onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
           </DndProvider>
-          <PreviewPane inPortal={true} onError={ this.handleRenderError } content={content}/>
+          <PreviewPane inPortal={true} onError={ this.handleRenderError } content={content} config={mscConfig.config}/>
         </React.Fragment>
       )
     }
@@ -266,7 +266,7 @@ class App extends React.Component {
             </DndProvider>
           </TabPanel>
           <TabPanel value={this.state.tab} index={1}>
-            <PreviewPane onError={ this.handleRenderError } content={content}/>
+            <PreviewPane onError={ this.handleRenderError } content={content} config={mscConfig.config} />
           </TabPanel>
         </div>
       )

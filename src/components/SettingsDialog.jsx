@@ -158,11 +158,10 @@ class SettingsDialog extends React.Component {
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="msc-additionalTemplate-label">Additional Style Template</InputLabel>
                   <Select labelId="msc-additionalTemplate-label" id="msc-additionalTemplate" value={ mscConfig.additionalTemplate } onChange={ this.handleChange(mscConfig, 'additionalTemplate', 'select') }>
-                    <MenuItem value={ 'Empty' }>Empty</MenuItem>
-                    <MenuItem value={ 'Classic' }>Classic</MenuItem>
-                    <MenuItem value={ 'Cygne' }>Cygne</MenuItem>
-                    <MenuItem value={ 'Fountainpen' }>Fountainpen</MenuItem>
-                    <MenuItem value={ 'Lazy' }>Lazy</MenuItem>
+                    <MenuItem value={ 'lazy' }>Lazy</MenuItem>
+                    <MenuItem value={ 'classic' }>Classic</MenuItem>
+                    <MenuItem value={ 'cygne' }>Cygne</MenuItem>
+                    <MenuItem value={ 'fountainpen' }>Fountainpen</MenuItem>
                   </Select>
                 </FormControl>
                 <FormControl className={ classes.formControl }>
