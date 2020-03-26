@@ -6,7 +6,6 @@ import { saveAs } from 'file-saver'
 import parsePath from 'parse-filepath'
 import mscConfig from './MSC_Config'
 
-
 export const modes = [
     'ABAP',
     'ABC',
@@ -40,33 +39,63 @@ export const modes = [
 ]
 
 const mscDefault = `msc {
-        # Options
-        wordwraparcs=true,
-        width=auto;
+  # Options
+  wordwraparcs=true,
+  width=auto;
 
-        # Entities
-        a [label="A"],
-        b [label="B"],
-        c [label="C"];
+  # Entities
+  a [label="A"],
+  b [label="B"],
+  c [label="C"];
 
-        # Arcs
-        a => b [label="A to B"];
-        b -> c [label="B to C"];
-        c >> b [label="C to B"];
-        b =>> a [label="B to A"];
-        |||; // Throw in a break
-        a box a [label="box over A"];
-        b rbox b [label="rbox over B"];
-        c abox c [label="abox over C"];
-        a note c [label="A note spanning A to C"];
+  # Arcs
+  a => b [label="A to B"];
+  b -> c [label="B to C"];
+  c >> b [label="C to B"];
+  b =>> a [label="B to A"];
+  |||; // Throw in a break
+  a box a [label="box over A"];
+  b rbox b [label="rbox over B"];
+  c abox c [label="abox over C"];
+  a note c [label="A note spanning A to C"];
 
-        // alt, opt, loop, par, exc, break, seq, strict,
-        // neg, ignore, consider, and assert
-        a loop c [label="3 times"]{
-         a => b [label="A to B"];
+  // alt, opt, loop, par, exc, break, seq, strict,
+  // neg, ignore, consider, and assert
+  a loop c [label="3 times"]{
+    a => b [label="A to B"];
+  };
+}
+`;
 
-        };
-  }`;
+const xuDefault = `xu {
+  # Options
+  wordwraparcs=true,
+  width=auto;
+
+  # Entities
+  a [label="A"],
+  b [label="B"],
+  c [label="C"],
+  d [label="D"];
+
+  # Arcs
+  a => b [label="A to B"];
+  b -> c [label="B to C"];
+  c >> b [label="C to B"];
+  b =>> a [label="B to A"];
+  |||; // Throw in a break
+  a box a [label="box over A"];
+  b rbox b [label="rbox over B"];
+  c abox c [label="abox over C"];
+  a note c [label="A note spanning A to C"];
+
+  // alt, opt, loop, par, exc, break, seq, strict,
+  // neg, ignore, consider, and assert
+  a loop d [label="3 times"]{
+    a => b [label="A to B"];
+  };
+}
+`;
 
 const msgennyDefault = `a -> b : ab();
   a => c : automatically declares entities used in arcs;
@@ -77,7 +106,123 @@ const msgennyDefault = `a -> b : ab();
   --- : Labels usually don't need enclosing quotes;
   --- : "except when they contain , or ;";
   ...;
-  `
+`;
+
+const jsonDefault = `{
+  "meta": {
+    "extendedOptions": true,
+    "extendedArcTypes": true,
+    "extendedFeatures": true
+  },
+  "options": {
+    "wordwraparcs": true,
+    "width": "auto"
+  },
+  "entities": [
+    {
+      "name": "a",
+      "label": "A"
+    },
+    {
+      "name": "b",
+      "label": "B"
+    },
+    {
+      "name": "c",
+      "label": "C"
+    }
+  ],
+  "arcs": [
+    [
+      {
+        "kind": "=>",
+        "from": "a",
+        "to": "b",
+        "label": "A to B"
+      }
+    ],
+    [
+      {
+        "kind": "->",
+        "from": "b",
+        "to": "c",
+        "label": "B to C"
+      }
+    ],
+    [
+      {
+        "kind": ">>",
+        "from": "c",
+        "to": "b",
+        "label": "C to B"
+      }
+    ],
+    [
+      {
+        "kind": "=>>",
+        "from": "b",
+        "to": "a",
+        "label": "B to A"
+      }
+    ],
+    [
+      {
+        "kind": "|||"
+      }
+    ],
+    [
+      {
+        "kind": "box",
+        "from": "a",
+        "to": "a",
+        "label": "box over A"
+      }
+    ],
+    [
+      {
+        "kind": "rbox",
+        "from": "b",
+        "to": "b",
+        "label": "rbox over B"
+      }
+    ],
+    [
+      {
+        "kind": "abox",
+        "from": "c",
+        "to": "c",
+        "label": "abox over C"
+      }
+    ],
+    [
+      {
+        "kind": "note",
+        "from": "a",
+        "to": "c",
+        "label": "A note spanning A to C"
+      }
+    ],
+    [
+      {
+        "kind": "loop",
+        "from": "a",
+        "to": "c",
+        "arcs": [
+          [
+            {
+              "kind": "=>",
+              "from": "a",
+              "to": "b",
+              "label": "A to B"
+            }
+          ]
+        ],
+        "label": "3 times"
+      }
+    ]
+  ]
+}
+`;
 
 const arcTypes = {
     solid: 'a -- b',
@@ -94,6 +239,7 @@ const arcTypes = {
     biemphasis: 'a <:> b',
     lost: 'a -x b'
 }
+
 const configAttrs = [
     'editor',
     'value',
@@ -110,10 +256,10 @@ const configAttrs = [
     'tabSize',
     'showLineNumbers',
 ]
-
 class EditorConfig {
+    @observable name = ''
     @observable editor = null
-    @observable value = ""
+    @observable value = ''
     @observable mode = 'javascript'
     @observable theme = 'xcode'
     @observable fontSize = 14
@@ -138,6 +284,13 @@ class EditorConfig {
         this.editor = editor
     }
 
+    @action setName(name) {
+        if(Boolean(name) && name !== this.name) {
+            this.name = name
+            localStorage.setItem('editor-name', name)
+        }
+    }
+
     @action
     setValue(value) {
         this.value = value
@@ -150,9 +303,22 @@ class EditorConfig {
         switch (inputType) {
             case 'msgenny':
                 this.setValue(msgennyDefault);
+                this.setName('demo')
+                break;
+            case 'mscgen':
+                this.setName('demo')
+                this.setValue(mscDefault);
+                break;
+            case 'xu':
+                this.setName('demo');
+                this.setValue(xuDefault);
+                break;
+            case 'json':
+                this.setName('demo');
+                this.setValue(jsonDefault);
                 break;
             default:
-                this.setValue(mscDefault);
+                console.log(`Reset Editor:  Error - unknown type: ${inputType}`)
                 break;
         }
     }
@@ -219,6 +385,10 @@ class EditorConfig {
         } else {
             this.setValue(mscDefault)
         }
+        const savedName = localStorage.getItem('editor-name')
+        if(Boolean(savedName)) {
+            this.name = savedName
+        }
 
         const configStr = localStorage.getItem('editor-config')
         if (Boolean(configStr)) {
@@ -246,14 +416,14 @@ class EditorConfig {
      * If a name is provided, the file is saved as `${name}.${type}`
      * If no name is provided, the current time stamp is used.
      */
-    saveToFile(name) {
+    saveToFile() {
 
         const blob = new Blob([this.value], {
             type: "text/plain;charset=utf-8"
         });
         // Save the blob to a local file
         const ext = mscConfig.fileType()
-        const fileName = Boolean(name) ? `${name}` : `${Math.floor(Date.now() / 1000)}`
+        const fileName = Boolean(this.name) ? `${this.name}` : `${Math.floor(Date.now() / 1000)}`
         saveAs(blob, `${fileName}.${ext}`);
     }
 
@@ -276,10 +446,13 @@ class EditorConfig {
         const fileReader = new FileReader()
         fileReader.onloadend = (e) => {
             const content = fileReader.result
-            const ext = parsePath(file.name).ext.slice(1)
+            const path = parsePath(file.name)
+            const ext = path.ext.slice(1)
+            const name = path.name
             mscConfig.setError(null)
             mscConfig.setSvg(null)
             mscConfig.setConfig('inputType', ext)
+            this.setName(name)
             this.setValue(content)
             if (Boolean(onClose)) {
                 onClose()

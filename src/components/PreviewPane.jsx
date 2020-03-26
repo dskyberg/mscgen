@@ -3,27 +3,11 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Portal from './Portal'
-import { observer } from 'mobx-react'
 import { withStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper'
+import ErrorView from './ErrorView'
 
 import mscConfig from '../store/MSC_Config'
-import editorConfig from '../store/EditorConfig'
 import getViewportSize from '../util/getViewportSize'
-
-
-/**
- * Called by App.jsx Enables toggling auto rendering
- * based on config setting.
- * @param {function} onError Error callback
- */
-export function renderPreview(onError) {
-    if (mscConfig.autoRender) {
-        //localRenderPreview(onError)
-    }
-}
 
 
 const styles = theme => ({
@@ -44,16 +28,12 @@ const styles = theme => ({
         display: 'block',
         boxSizing: 'inherit',
     },
-    error: {
-        padding: theme.spacing(2)
-    }
 });
 
 @withStyles(styles)
 class PreviewPane extends React.Component {
     static propTypes = {
         onError: PropTypes.func.isRequired,
-        inPortal: PropTypes.bool
     }
     static defaultProps = {
         inPortal: false
@@ -64,83 +44,11 @@ class PreviewPane extends React.Component {
         this.svgElem = null
     }
 
-    setSvgElem = elem => {
-        this.svgElem = elem
-        //this.localRenderPreview(this.props.onError)
-    }
-
-    /**
-     *
-     * @param {function} onError
-     */
-    localRenderPreview = (onError) => {
-        const config = mscConfig.config
-        const script = editorConfig.value
-        if (!Boolean(this.svgElem)) {
-            // The __svg div doesn't appear to exist.  Bale out
-            // throw new Error("Can't find id of target element to render to")
-            return
-        }
-        //    const elem = document.getElementById('__svg')
-        const elem = this.svgElem
-        const win = elem.ownerDocument.defaultView || elem.ownerDocument.parentWindow
-        config['window'] = win
-        // Always clear the existing svg, or we get some strange overlay conditions
-        elem.innerHTML = ''
-
-        require('mscgenjs').renderMsc(
-            script,
-            config,
-            (pError, pSuccess) => {
-                if (Boolean(pError)) {
-                    mscConfig.setSvg(null)
-                    mscConfig.setError(pError)
-                    if (onError) {
-                        onError(pError)
-                    }
-                    return;
-                }
-                if (Boolean(pSuccess)) {
-                    // pSuccess holds the svg
-                    mscConfig.setError(null)
-                    mscConfig.setSvg(pSuccess)
-                    return;
-                }
-                console.log('Wat! Error nor success?');
-            }
-        );
-    }
-
     /**
      * Render the preview, if there is a script, when the pane loads.
      */
     componentDidMount() {
-        this.localRenderPreview(this.props.onError)
-    }
-
-    /**
-     * If a render error occurs, show the error, instead of the svg.
-     */
-    displayError = (error) => {
-        if (!Boolean(error)) {
-            return null
-        }
-        const name = Boolean(error.name) ? error.name : 'No name'
-        const message = Boolean(error.message) ? error.message : 'No message'
-        const startLine = Boolean(error.location) ? error.location.start.line : 'Unknown'
-        return (
-            <Paper className={ this.props.classes.error }>
-              <Typography variant="h4">
-                { name }
-              </Typography>
-              <Typography>Line:
-                { startLine }
-              </Typography>
-              <Typography>
-                { message }
-              </Typography>
-            </Paper>
-        )
+        mscConfig.render(this.props.onError)
     }
 
     /**
@@ -149,12 +57,8 @@ class PreviewPane extends React.Component {
     handleRenderClicked = (event) => {
         event.stopPropagation()
         if(!mscConfig.autoRender){
-            this.localRenderPreview(this.props.onError)
+            mscConfig.render(this.props.onError)
         }
-    }
-
-    handlePortalOpen = () => {
-        this.localRenderPreview(this.props.onError)
     }
 
     /**
@@ -173,7 +77,7 @@ class PreviewPane extends React.Component {
         }
 
         if(nextProps.content !== this.props.content || nextProps.config !== this.props.config) {
-            this.localRenderPreview(this.props.onError)
+            mscConfig.render(this.props.onError)
         }
         // Always return true, or other changes won't cause a render
         return true
@@ -181,29 +85,18 @@ class PreviewPane extends React.Component {
 
 
     render() {
-        const {classes, inPortal, onError} = this.props
+        const {classes} = this.props
         const error = mscConfig.error
         const errorState = Boolean(error)
         const features = {
             left: 0,
             top: 0
         }
-        // Experimental support for createPortal.
-        if (inPortal) {
-            return (
-                <Portal url="" name="MSCGenPreview" title="MSCGen Preview" copyStyles={ true } onOpen={ this.handlePortalOpen } features={ features } onClick={this.handleRenderClicked}>
-                  <div id="svg_wrapper_portal" className={ classes.svg_wrapper }  onClick={this.handleRenderClicked}>
-                    <div hidden={ errorState } ref={ this.setSvgElem } id="__svg" ></div>
-                    { this.displayError(error) }
-                  </div>
-                </Portal>
-            )
-        }
 
         return (
             <div id="svg_wrapper" className={ classes.svg_wrapper } onClick={ this.handleRenderClicked }>
-              <div hidden={ errorState } ref={ this.setSvgElem } id="__svg"></div>
-              { this.displayError(error) }
+              <div hidden={ errorState } ref={ mscConfig.setSvgElem } id="__svg"></div>
+              <ErrorView error={error} />
             </div>
         )
     }

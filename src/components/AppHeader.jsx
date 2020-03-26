@@ -56,7 +56,7 @@ function doGitHub() {
 }
 
 function AppHeader(props){
-    const {onDrawerClick, title, onSettingsClick, onModeClick, mode, open} = props
+    const {onDrawerClick, title, name, onSettingsClick, onModeClick, mode, open} = props
     const classes = useStyles()
     const modeIcon =  mode === 'tabs' ? <VerticalSplitIcon/> : <TabIcon/>
     const modeTitle = mode === 'tabs' ? 'Use split view' : 'Use tabbed view'
@@ -68,7 +68,7 @@ function AppHeader(props){
             </IconButton>
             <img src="logo.png" alt="logo" className={classes.logo} />
             <Tltle className={ classes.title }>
-                {title}
+                {`${title} [${name}]`}
             </Tltle>
             <Tooltip title={modeTitle} aria-label={modeTitle}>
                 <IconButton color="inherit" onClick={onModeClick}>

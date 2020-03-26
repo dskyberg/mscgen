@@ -15,7 +15,7 @@ import TabPanel from './components/TabPanel'
 import AppHeader from './components/AppHeader'
 import AppDrawer from './components/AppDrawer';
 import EditorPane from './components/EditorPane'
-import PreviewPane, { renderPreview } from './components/PreviewPane'
+import PreviewPane from './components/PreviewPane'
 import OpenFileDialog from './components/OpenFileDialog'
 import SettingsDialog from './components/SettingsDialog'
 import Splitter from './components/Splitter'
@@ -28,7 +28,12 @@ import editorConfig from './store/EditorConfig'
 import getViewportSize from './util/getViewportSize'
 import {drawerWidth} from './components/AppDrawer'
 
-
+/**
+ * Delivered to the class component (App) via the Material-UI
+ * withStyles HOC. Since App is the top level component, it is also
+ * wrapped with the withRoot HOC, to set the theme.
+ * @param {} theme
+ */
 const styles = theme => ({
   app_root: {
     height: getViewportSize(window).height,
@@ -66,6 +71,10 @@ const styles = theme => ({
   }
 });
 
+/**
+ * App listens to (observes) changes in the EditorConfig and MSC_Config stores and renders
+ * on changes
+ */
 @observer
 class App extends React.Component {
 
@@ -87,6 +96,9 @@ class App extends React.Component {
     }
   }
 
+  /**
+   * Event handlers and callbacks
+   */
   handleSettingsClick = () => {
     this.setState({
       settingsDialogOpen: true
@@ -104,23 +116,22 @@ class App extends React.Component {
       drawerOpen: true
     })
   };
+
   handleDrawerClose = () => {
     this.setState({
       drawerOpen: false
     })
   };
 
+  // Clear the current snackbar error message
   handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
     this.setState({
       snackbarOpen: false,
       snackbarMsg: ""
     });
   };
 
+  // Callback for PreviewPane onError.  Gets passed eventually to MSC_Config.render
   handleRenderError = (pError) => {
     this.setState({
       snackbarMsg: pError.message,
@@ -133,7 +144,6 @@ class App extends React.Component {
    */
   handleEditorChange = newState => {
     editorConfig.setValue(newState)
-    renderPreview(this.handleRenderError)
   }
 
   /**
@@ -143,7 +153,6 @@ class App extends React.Component {
     this.setState({cdOpen: false, cdTitle: null, cdMessage: null, cdOnClose: null})
     if(Boolean(value)) {
       editorConfig.resetEditor();
-      renderPreview(this.handleRenderError);
     }
   }
 
@@ -202,23 +211,25 @@ class App extends React.Component {
     this.setState({
       openFileDialogOpen: false
     })
-    if (value !== null) {
-      renderPreview(this.handleRenderError)
-    }
   }
 
   /**
    * When the Ace Editor instance is about to load,
-   * get a pointer to it
+   * get a pointer to it.  Then we can do things like add
+   * snippets.
    */
   handleOnLoad = (editor) => {
     editorConfig.setEditor(editor)
   }
 
+  /**
+   * Be able to switch between tabbed and split pane views. Defaults to split pane.
+   */
   handleModeChanged = () => {
     const mode = this.state.mode
     this.setState({mode: mode === 'tabs' ? 'split' : 'tabs'})
   }
+
   /**
    * If using tabs, track when the tab changes
    */
@@ -242,16 +253,6 @@ class App extends React.Component {
         </Splitter>
       )
     }
-    const doMultiWindow = () => {
-      return (
-        <React.Fragment>
-          <DndProvider backend={Backend}>
-            <EditorPane inSplitter={false} open={ drawerOpen } onChange={ this.handleEditorChange } onLoad={ this.handleOnLoad } content={ content } error={ error } />
-          </DndProvider>
-          <PreviewPane inPortal={true} onError={ this.handleRenderError } content={content} config={mscConfig.config}/>
-        </React.Fragment>
-      )
-    }
 
     const doTabs = () => {
       return (
@@ -271,20 +272,13 @@ class App extends React.Component {
         </div>
       )
     }
-    const doView = () => {
-     switch(this.state.mode) {
-       case 'multi': return doMultiWindow();
-       case 'tabs': return doTabs();
-       default: return doSplitWindow()
-     }
-    }
 
     return (
       <div className={ classes.app_root }>
-        <AppHeader title="MSC Generator" onDrawerClick={ this.handleDrawerOpen } open={ drawerOpen } onSettingsClick={ this.handleSettingsClick } mode={this.state.mode} onModeClick={this.handleModeChanged}/>
+        <AppHeader title="MSC Generator" name={editorConfig.name} onDrawerClick={ this.handleDrawerOpen } open={ drawerOpen } onSettingsClick={ this.handleSettingsClick } mode={this.state.mode} onModeClick={this.handleModeChanged}/>
         <AppDrawer open={ drawerOpen } onClose={ this.handleDrawerClose } onClick={ this.handleDrawerItem } />
         <Container className={ classes.container }>
-          {doView()}
+          {this.state.mode === 'tabs' ? doTabs() : doSplitWindow()}
         </Container>
         <OpenFileDialog open={ openFileDialogOpen } onClose={ this.handleOpenFile } />
         <SettingsDialog open={ settingsDialogOpen } onClose={ this.handleSettingsClosed } />
