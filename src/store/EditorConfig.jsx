@@ -6,37 +6,39 @@ import { saveAs } from 'file-saver'
 import parsePath from 'parse-filepath'
 import mscConfig from './MSC_Config'
 
-export const modes = [
-    'ABAP',
-    'ABC',
-    'ActionScript',
-    'ADA',
-    'Apache_Conf',
-    'AsciDoc',
-    'Assembly_x86',
-    'AutoHotKey',
-    'BatchFile',
-    'C9Search',
-    'C_Cpp',
-    'Cirru',
-    'Clojure',
-    'Cobol',
-    'coffee',
-    'ColdFusion',
-    'CSharp',
-    'CSS',
-    'Curly',
-    'D',
-    'Dart',
-    'Diff',
-    'Dockerfile',
-    'Dot',
-    'Dummy',
-    'DummySyntax',
-    'Eiffel',
-    'EJS',
-    'Elixir'
-]
+
+/*
+  Import the Ace language support
+*/
+import "ace-builds/src-noconflict/ext-language_tools";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-json";
+
+
+/*
+Import the Ace themes
+*/
+import "ace-builds/src-noconflict/theme-ambiance";
+import "ace-builds/src-noconflict/theme-chaos";
+import "ace-builds/src-noconflict/theme-chrome";
+import "ace-builds/src-noconflict/theme-clouds";
+import "ace-builds/src-noconflict/theme-clouds_midnight";
+import "ace-builds/src-noconflict/theme-cobalt";
+import "ace-builds/src-noconflict/theme-crimson_editor";
+import "ace-builds/src-noconflict/theme-dawn";
+import "ace-builds/src-noconflict/theme-dracula";
+import "ace-builds/src-noconflict/theme-dreamweaver";
+import "ace-builds/src-noconflict/theme-eclipse";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-gob";
+import "ace-builds/src-noconflict/theme-gruvbox";
+import "ace-builds/src-noconflict/theme-idle_fingers";
+import "ace-builds/src-noconflict/theme-iplastic";
+import "ace-builds/src-noconflict/theme-katzenmilch";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-xcode";
+
 
 const mscDefault = `msc {
   # Options
@@ -223,6 +225,34 @@ const jsonDefault = `{
   ]
 }
 `;
+
+export const Modes = {
+  json: {display: 'json'},
+  java: { display: 'java'},
+  javascript: {display: 'javascript'}
+}
+
+export const Themes = {
+ambiance: {display: 'ambiance'},
+chaos: {display: 'chaos'},
+chrome: {display: 'chrome'},
+clouds: {display: 'clouds'},
+clouds_midnight: {display: 'clouds_midnight'},
+cobalt: {display: 'cobalt'},
+crimson_editor: {display: 'crimson_editor'},
+dawn: {display: 'dawn'},
+dracula: {display: 'dracula'},
+dreamweaver: {display: 'dreamweaver'},
+eclipse: {display: 'eclipse'},
+github: {display: 'github'},
+gob: {display: 'gob'},
+gruvbox: {display: 'gruvbox'},
+idle_fingers: {display: 'idle_fingers'},
+iplastic: {display: 'iplastic'},
+katzenmilch: {display: 'katzenmilch'},
+monokai: {display: 'monokai'},
+xcode: {display: 'xcode'},
+}
 
 const arcTypes = {
     solid: 'a -- b',

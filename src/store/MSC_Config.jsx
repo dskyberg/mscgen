@@ -5,20 +5,36 @@ import { observable, action, computed, toJS } from "mobx"
 import { saveAs } from 'file-saver'
 import editorConfig from './EditorConfig'
 
-export const InputTypes = [
-    'msgenny',
-    'mscgen',
-    'xu',
-    'json'
-]
+export const InputTypes = {
+    xu: {display: 'Xu'},
+    msc: {display: 'MSC'},
+    msgenny: {display: 'Msgenny'},
+    json: {display: 'JSON'}
+}
+
+export const AdditionalTemplates = {
+    cygne: {display: 'Cygne'},
+    lazy: {display: 'Lazy'},
+    classic: {display: 'Classic'},
+    pegasse: {display: 'Pegasse'},
+    fountainpen: {display: 'Fountain pen'},
+    empty: {display: 'No entity boxes'}
+}
+
+
+export const VerticalAlignments = {
+    above: {display: 'Above'},
+    middle :{display: 'Middle'},
+    below: {display: 'Below'}
+}
 
 class MSC_Config {
     @observable elementId = "__svg"
-    @observable inputType = "xu" // mscgen, msgenny, xu, json
+    @observable inputType = Object.keys(InputTypes)[0]
     @observable mirrorEntitiesOnBottom = true
-    @observable additionalTemplate = 'cygne' // lazy, classic, cygne, pegasse, fountainpen
+    @observable additionalTemplate = Object.keys(AdditionalTemplates)[0]
     @observable includeSource = false
-    @observable regularArcTextVerticalAlignment = 'above' // above, middle, below
+    @observable regularArcTextVerticalAlignment = Object.keys(VerticalAlignments)[0]
     @observable styleAdditions = null
     @observable autoRender = true
     @observable error = null
@@ -46,7 +62,7 @@ class MSC_Config {
         if(!Boolean(inputType) || inputType === this.inputType){
             return
         }
-        if(InputTypes.includes(inputType)) {
+        if(inputType in InputTypes) {
             if(Boolean(editorConfig) && Boolean(editorConfig.value)){
                 editorConfig.transpile(inputType, false)
             }
@@ -56,7 +72,34 @@ class MSC_Config {
         throw new Error(`MSC_Config.setInputType: invalid type: ${inputType}`)
     }
 
+    @action
+    setAdditionalTemplate = (value) => {
+        if(!Boolean(value)) {
+            return
+        }
+        const val = value.toLowerCase()
+        if(val === this.additionalTemplate) {
+            return
+        }
+        if(val in AdditionalTemplates) {
+            this.additionalTemplate = val
+        } else {
+            throw new Error(`MSC_Config.setAdditionalTemplate: invalid value: ${value}`)
+        }
+    }
 
+    @action
+    setVerticalAlignment = (value) => {
+        if(!Boolean(value)) {
+            return
+        }
+        const val = value.toLowerCase()
+        if(val in VerticalAlignments) {
+            this.regularArcTextVerticalAlignment = val
+        } else {
+            throw new Error(`MSC_Config.setAVerticalAlignments: invalid value: ${value}`)
+        }
+    }
 
     @action
     setConfigValue = (name, value) => {
@@ -64,10 +107,9 @@ class MSC_Config {
             case 'elementId': this.elementId = value; break;
             case 'inputType': this.setInputType(value); break;
             case 'mirrorEntitiesOnBottom': this.mirrorEntitiesOnBottom = value; break;
-            case 'fixedNamedStyle':
-            case 'additionalTemplate': this.additionalTemplate = value.toLowerCase(); break;
+            case 'additionalTemplate': this.setAdditionalTemplate(value); break;
             case 'includeSource': this.includeSource = value; break;
-            case 'regularArcTextVerticalAlignment': this.regularArcTextVerticalAlignment = value; break;
+            case 'regularArcTextVerticalAlignment': this.setVerticalAlignment(value); break;
             case 'autoRender': this.autoRender = value; break;
             default: console.log('Unknown name+value', name, value); throw new Error('Unknown value');
         }
@@ -77,11 +119,10 @@ class MSC_Config {
     setConfig = (name, value) => {
         try {
             this.setConfigValue(name,value)
+            localStorage.setItem('msc-config', JSON.stringify(this.config))
         } catch(err) {
             return
         }
-
-        localStorage.setItem('msc-config', JSON.stringify(this.config))
     }
 
     @computed get config() {
@@ -89,10 +130,12 @@ class MSC_Config {
             elementId: this.elementId,
             inputType: this.inputType,
             mirrorEntitiesOnBottom: this.mirrorEntitiesOnBottom,
-            additionalTemplate: this.additionalTemplate,
             includeSource: this.includeSource,
             regularArcTextVerticalAlignment: this.regularArcTextVerticalAlignment,
             autoRender: this.autoRender,
+        }
+        if(Boolean(this.additionalTemplate)) {
+            config.additionalTemplate = this.additionalTemplate
         }
         if (this.styleAdditions !== null) {
             config.styleAdditions = this.styleAdditions

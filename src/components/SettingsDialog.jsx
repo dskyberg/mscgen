@@ -23,8 +23,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField'
 import Switch from '@material-ui/core/Switch';
 
-import editorConfig from '../store/EditorConfig'
-import mscConfig from '../store/MSC_Config'
+import editorConfig, {Modes, Themes} from '../store/EditorConfig'
+import mscConfig, {InputTypes, AdditionalTemplates, VerticalAlignments} from '../store/MSC_Config'
 const VERSION = process.env.REACT_APP_VERSION
 const styles = theme => ({
   dialogContent: {
@@ -102,33 +102,13 @@ class SettingsDialog extends React.Component {
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="editor-mode-label">Mode</InputLabel>
                   <Select labelId="editor-mode-label" id="editor-mode" value={ editorConfig.mode } onChange={ this.handleChange(editorConfig, 'mode', 'select') }>
-                    <MenuItem value={ 'java' }>java</MenuItem>
-                    <MenuItem value={ 'javascript' }>javascript</MenuItem>
-                    <MenuItem value={ 'json' }>json</MenuItem>
+                    {Object.keys(Modes).map((key, index) =>  <MenuItem key={index+1} value={key}>{Modes[key].display}</MenuItem>)}
                   </Select>
                 </FormControl>
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="editor-theme-label">Theme</InputLabel>
                   <Select labelId="editor-theme-label" id="editor-theme" value={ editorConfig.theme } onChange={ this.handleChange(editorConfig, 'theme', 'select') }>
-                    <MenuItem value={ 'ambiance' }>ambiance</MenuItem>
-                    <MenuItem value={ 'chaos' }>chaos</MenuItem>
-                    <MenuItem value={ 'chrome' }>chrome</MenuItem>
-                    <MenuItem value={ 'clouds' }>clouds</MenuItem>
-                    <MenuItem value={ 'clouds_midnight' }>clouds_midnight</MenuItem>
-                    <MenuItem value={ 'cobalt' }>cobalt</MenuItem>
-                    <MenuItem value={ 'crimson_editor' }>crimson_editor</MenuItem>
-                    <MenuItem value={ 'dawn' }>dawn</MenuItem>
-                    <MenuItem value={ 'dracula' }>dracula</MenuItem>
-                    <MenuItem value={ 'dreamweaver' }>dreamweaver</MenuItem>
-                    <MenuItem value={ 'eclipse' }>eclipse</MenuItem>
-                    <MenuItem value={ 'github' }>github</MenuItem>
-                    <MenuItem value={ 'gob' }>gob</MenuItem>
-                    <MenuItem value={ 'gruvbox' }>gruvbox</MenuItem>
-                    <MenuItem value={ 'idle_fingers' }>idle_fingers</MenuItem>
-                    <MenuItem value={ 'iplastic' }>iplastic</MenuItem>
-                    <MenuItem value={ 'katzenmilch' }>katzenmilch</MenuItem>
-                    <MenuItem value={ 'monokai' }>monokai</MenuItem>
-                    <MenuItem value={ 'xcode' }>xcode</MenuItem>
+                    {Object.keys(Themes).map((key, index) =>  <MenuItem key={index+1} value={key}>{Themes[key].display}</MenuItem>)}
                   </Select>
                 </FormControl>
                 <FormControlLabel label="Show print margin" labelPlacement="start" control={ < Switch id="editor-showPrintMargin" checked={ editorConfig.showPrintMargin } onChange={ this.handleChange(editorConfig, 'showPrintMargin', 'switch') } value="showPrintMargin" inputProps={ { 'aria-label': 'secondary checkbox' } } /> } />
@@ -149,27 +129,19 @@ class SettingsDialog extends React.Component {
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="msc-inputType-label">Input type</InputLabel>
                   <Select labelId="msc-inputType-label" id="msc-inputType" value={ mscConfig.inputType } onChange={ this.handleChange(mscConfig, 'inputType', 'select') }>
-                    <MenuItem value={ 'mscgen' }>mscgen</MenuItem>
-                    <MenuItem value={ 'msgenny' }>msgenny</MenuItem>
-                    <MenuItem value={ 'xu' }>xu</MenuItem>
-                    <MenuItem value={ 'json' }>json</MenuItem>
+                    {Object.keys(InputTypes).map((key, index) =>  <MenuItem key={index+1} value={key}>{InputTypes[key].display}</MenuItem>)}
                   </Select>
                 </FormControl>
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="msc-additionalTemplate-label">Additional Style Template</InputLabel>
                   <Select labelId="msc-additionalTemplate-label" id="msc-additionalTemplate" value={ mscConfig.additionalTemplate } onChange={ this.handleChange(mscConfig, 'additionalTemplate', 'select') }>
-                    <MenuItem value={ 'lazy' }>Lazy</MenuItem>
-                    <MenuItem value={ 'classic' }>Classic</MenuItem>
-                    <MenuItem value={ 'cygne' }>Cygne</MenuItem>
-                    <MenuItem value={ 'fountainpen' }>Fountainpen</MenuItem>
+                  {Object.keys(AdditionalTemplates).map((key, index) =>  <MenuItem key={index+1} value={key}>{AdditionalTemplates[key].display}</MenuItem>)}
                   </Select>
                 </FormControl>
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="msc-regularArcTextVerticalAlignment-label">Text alignment</InputLabel>
                   <Select labelId="msc-regularArcTextVerticalAlignment-label" id="msc-regularArcTextVerticalAlignment" value={ mscConfig.regularArcTextVerticalAlignment } onChange={ this.handleChange(mscConfig, 'regularArcTextVerticalAlignment', 'select') }>
-                    <MenuItem value={ 'above' }>above</MenuItem>
-                    <MenuItem value={ 'middle' }>middle</MenuItem>
-                    <MenuItem value={ 'below' }>below</MenuItem>
+                    {Object.keys(VerticalAlignments).map((key, index) =>  <MenuItem key={index+1} value={key}>{VerticalAlignments[key].display}</MenuItem>)}
                   </Select>
                 </FormControl>
                 <FormControlLabel label="Mirror entities" labelPlacement="start" control={ < Switch id="msc-mirrorEntitiesOnBottom" checked={ mscConfig.mirrorEntitiesOnBottom } onChange={ this.handleChange(mscConfig, 'mirrorEntitiesOnBottom', 'switch') } value="mirrorEntitiesOnBottom" inputProps={ { 'aria-label': 'secondary checkbox' } }
