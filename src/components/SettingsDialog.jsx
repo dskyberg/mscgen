@@ -1,5 +1,25 @@
-/*
-    Copyright (c) 2020 by David Skyberg
+/**
+* Copyright (c) 2020 David Skyberg and Swankymutt.com
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*
+* SettingsDialog.jsx
 */
 import React from 'react';
 import PropTypes from 'prop-types'
@@ -23,8 +43,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField'
 import Switch from '@material-ui/core/Switch';
 
-import editorConfig, {Modes, Themes} from '../store/EditorConfig'
-import mscConfig, {InputTypes, AdditionalTemplates, VerticalAlignments} from '../store/MSC_Config'
+import editorConfig, { Modes, Themes } from '../store/EditorConfig'
+import mscConfig, { InputTypes, AdditionalTemplates, VerticalAlignments } from '../store/MSC_Config'
 const VERSION = process.env.REACT_APP_VERSION
 const styles = theme => ({
   dialogContent: {
@@ -51,6 +71,19 @@ function NumberFormatCustom(props) {
                                                                     })
                                                                   } } thousandSeparator isNumericString />
     );
+}
+
+function SelectDisplay(props) {
+  const {target, ...other} = props
+  return (
+    <Select {...other}>
+      { Object.keys(target).map((key, index) => <MenuItem key={ index + 1 } value={ key }>
+                                              { target[key].display }
+                                              </MenuItem>)
+      }
+
+    </Select>
+  )
 }
 
 NumberFormatCustom.propTypes = {
@@ -84,7 +117,9 @@ class SettingsDialog extends React.Component {
       <Dialog open={ open } onClose={ onClose } scroll="paper">
         <DialogTitle id="settings-dialog-title">Settings</DialogTitle>
         <DialogContent dividers={ true } id="settings-dialog-recognition">
-          <Typography variant="body1">{`Version ${VERSION}`}</Typography>
+          <Typography variant="body1">
+            { `Version ${VERSION}` }
+          </Typography>
           <Typography variant="body1">This app was assembled by David Skyberg</Typography>
           <Typography variant="body1">It leverage the great work done on Ace Editor and mscgenjs</Typography>
         </DialogContent>
@@ -101,15 +136,11 @@ class SettingsDialog extends React.Component {
                 </FormControl>
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="editor-mode-label">Mode</InputLabel>
-                  <Select labelId="editor-mode-label" id="editor-mode" value={ editorConfig.mode } onChange={ this.handleChange(editorConfig, 'mode', 'select') }>
-                    {Object.keys(Modes).map((key, index) =>  <MenuItem key={index+1} value={key}>{Modes[key].display}</MenuItem>)}
-                  </Select>
+                  < SelectDisplay target={Modes} labelId="editor-mode-label" id="editor-mode" value={ editorConfig.mode } onChange={this.handleChange(editorConfig, 'mode', 'select')} />
                 </FormControl>
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="editor-theme-label">Theme</InputLabel>
-                  <Select labelId="editor-theme-label" id="editor-theme" value={ editorConfig.theme } onChange={ this.handleChange(editorConfig, 'theme', 'select') }>
-                    {Object.keys(Themes).map((key, index) =>  <MenuItem key={index+1} value={key}>{Themes[key].display}</MenuItem>)}
-                  </Select>
+                  <SelectDisplay target={Themes} labelId="editor-theme-label" id="editor-theme" value={ editorConfig.theme } onChange={ this.handleChange(editorConfig, 'theme', 'select') }/>
                 </FormControl>
                 <FormControlLabel label="Show print margin" labelPlacement="start" control={ < Switch id="editor-showPrintMargin" checked={ editorConfig.showPrintMargin } onChange={ this.handleChange(editorConfig, 'showPrintMargin', 'switch') } value="showPrintMargin" inputProps={ { 'aria-label': 'secondary checkbox' } } /> } />
                 <FormControlLabel label="Show gutter" labelPlacement="start" control={ < Switch id="editor-showGutter" checked={ editorConfig.showGutter } onChange={ this.handleChange(editorConfig, 'showGutter', 'switch') } value="showGutter" inputProps={ { 'aria-label': 'secondary checkbox' } } /> } />
@@ -128,21 +159,15 @@ class SettingsDialog extends React.Component {
               <FormGroup>
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="msc-inputType-label">Input type</InputLabel>
-                  <Select labelId="msc-inputType-label" id="msc-inputType" value={ mscConfig.inputType } onChange={ this.handleChange(mscConfig, 'inputType', 'select') }>
-                    {Object.keys(InputTypes).map((key, index) =>  <MenuItem key={index+1} value={key}>{InputTypes[key].display}</MenuItem>)}
-                  </Select>
-                </FormControl>
+                  <SelectDisplay target={InputTypes} labelId="msc-inputType-label" id="msc-inputType" value={ mscConfig.inputType } onChange={ this.handleChange(mscConfig, 'inputType', 'select') }/>
+               </FormControl>
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="msc-additionalTemplate-label">Additional Style Template</InputLabel>
-                  <Select labelId="msc-additionalTemplate-label" id="msc-additionalTemplate" value={ mscConfig.additionalTemplate } onChange={ this.handleChange(mscConfig, 'additionalTemplate', 'select') }>
-                  {Object.keys(AdditionalTemplates).map((key, index) =>  <MenuItem key={index+1} value={key}>{AdditionalTemplates[key].display}</MenuItem>)}
-                  </Select>
+                  <SelectDisplay target={AdditionalTemplates} labelId="msc-additionalTemplate-label" id="msc-additionalTemplate" value={ mscConfig.additionalTemplate } onChange={ this.handleChange(mscConfig, 'additionalTemplate', 'select') }/>
                 </FormControl>
                 <FormControl className={ classes.formControl }>
                   <InputLabel id="msc-regularArcTextVerticalAlignment-label">Text alignment</InputLabel>
-                  <Select labelId="msc-regularArcTextVerticalAlignment-label" id="msc-regularArcTextVerticalAlignment" value={ mscConfig.regularArcTextVerticalAlignment } onChange={ this.handleChange(mscConfig, 'regularArcTextVerticalAlignment', 'select') }>
-                    {Object.keys(VerticalAlignments).map((key, index) =>  <MenuItem key={index+1} value={key}>{VerticalAlignments[key].display}</MenuItem>)}
-                  </Select>
+                  <SelectDisplay target={VerticalAlignments} labelId="msc-regularArcTextVerticalAlignment-label" id="msc-regularArcTextVerticalAlignment" value={ mscConfig.regularArcTextVerticalAlignment } onChange={ this.handleChange(mscConfig, 'regularArcTextVerticalAlignment', 'select') }/>
                 </FormControl>
                 <FormControlLabel label="Mirror entities" labelPlacement="start" control={ < Switch id="msc-mirrorEntitiesOnBottom" checked={ mscConfig.mirrorEntitiesOnBottom } onChange={ this.handleChange(mscConfig, 'mirrorEntitiesOnBottom', 'switch') } value="mirrorEntitiesOnBottom" inputProps={ { 'aria-label': 'secondary checkbox' } }
                                                                                            /> } />
